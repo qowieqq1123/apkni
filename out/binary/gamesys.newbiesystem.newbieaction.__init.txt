@@ -1,0 +1,14 @@
+
+
+
+
+
+newbieConfig.loadAction('newbieUIAction')
+newbieConfig.loadAction('newbieEntityAction')
+newbieConfig.loadAction('newbieWinAction')
+
+newbieConfig.loadAction('newbieGroup')
+
+newbieConfig.loadAction('newbieManagerGroup')
+
+

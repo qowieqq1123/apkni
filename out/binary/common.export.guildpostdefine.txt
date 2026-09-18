@@ -1,0 +1,8 @@
+
+GUILD_POST_TYPE=
+{
+gpAllyLeader=1,
+gpViceLeader=2,
+gpElder=3,
+gpCivilian=4,
+}

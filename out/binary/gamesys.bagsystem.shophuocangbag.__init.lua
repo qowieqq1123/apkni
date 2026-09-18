@@ -1,0 +1,4 @@
+
+require'lua.gamesys/bagSystem/shophuocangBag/shophuocangBagModel'
+bagControl.register(shophuocangBagModel)
+require'lua.gamesys/bagSystem/shophuocangBag/shophuocangBagProtocolControl'

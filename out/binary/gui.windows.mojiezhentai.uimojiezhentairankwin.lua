@@ -1,0 +1,976 @@
+
+
+
+
+
+
+
+
+def_class("UIMoJieZhenTaiRankWin",UIWindowBase)
+
+
+
+
+
+
+
+
+
+function UIMoJieZhenTaiRankWin:bindComponents()
+
+self.background=UIButton.get(self,0)
+self.closeBtn=UIButton.get(self,1)
+self.monsterList=UIObject.get(self,2)
+self.owner_1=UIObject.get(self,3)
+self.owner_2=UIObject.get(self,4)
+self.panel_1=UIObject.get(self,5)
+self.panel_2=UIObject.get(self,6)
+self.root=UIObject.get(self,7)
+self.scrollView_1=UILoopListView.new(self,8)
+self.scrollView_2=UILoopListView.new(self,9)
+self.typeList=UIObject.get(self,10)
+
+self.background:setButtonClick(function()self:onBackground()end)
+
+self.closeBtn:setButtonClick(function()self:onCloseBtn()end)
+
+self.scrollView_1:bindLoopListView(function(...)
+self:onFreshAction(...)
+end,function(...)
+self:onStartAction(...)
+end)
+self.scrollView_2:bindLoopListView(function(...)
+self:onFreshAction_2(...)
+end,function(...)
+self:onStartAction_2(...)
+end)self.owner={
+self.owner_1,
+self.owner_2,
+}
+self.panel={
+self.panel_1,
+self.panel_2,
+}
+self.scrollView={
+self.scrollView_1,
+self.scrollView_2,
+}
+
+
+
+end
+
+
+function UIMoJieZhenTaiRankWin:unbindComponents()
+local _UIObject_release=UIObject.release
+_UIObject_release(self.background);self.background=nil;
+_UIObject_release(self.closeBtn);self.closeBtn=nil;
+_UIObject_release(self.monsterList);self.monsterList=nil;
+_UIObject_release(self.owner_1);self.owner_1=nil;
+_UIObject_release(self.owner_2);self.owner_2=nil;
+_UIObject_release(self.panel_1);self.panel_1=nil;
+_UIObject_release(self.panel_2);self.panel_2=nil;
+_UIObject_release(self.root);self.root=nil;
+self.scrollView_1:deleteSelf();self.scrollView_1=nil;
+self.scrollView_2:deleteSelf();self.scrollView_2=nil;
+_UIObject_release(self.typeList);self.typeList=nil;
+self.owner=nil;
+self.panel=nil;
+self.scrollView=nil;
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local _this=nil
+local _monsterCmp={
+root=-1,
+name=0,
+flag=1,
+select=2,
+}
+local _typeCmp={
+root=-1,
+name=1,
+select=0,
+}
+local _typeDatas={
+[1]={
+type=1,
+name="祖师",
+colName="person_rank_reward",
+defName="not_in_rank_person_reward",
+isDrop=false,
+anyRankType=1,
+panel=1,
+rankItem="item1",
+refreshOwner=function(win,num,score)
+win:refreshOwner1(num,score)
+
+end,
+getStateRewawrds=function(win,build_id,stageCfg,beginTime)
+return defaultT
+end,
+},
+[2]={
+type=2,
+name="仙盟",
+colName="guild_rank_reward",
+defName="not_in_rank_guild_reward",
+isDrop=true,
+anyRankType=1,
+panel=2,
+rankItem="item2",
+refreshOwner=function(win,num,score)
+win:refreshOwner2(num,score)
+
+end,
+getStateRewawrds=function(win,build_id,stageCfg,beginTime)
+return defaultT
+end,
+}
+}
+local _owner1Cmp={
+rankImage=0,
+rankImageTx=1,
+rankTx=2,
+headBG=3,
+head=4,
+playerName=5,
+serverName=6,
+score=7,
+rewardList=8,
+noReward=9,
+rewardView=10,
+}
+local _owner2Cmp={
+rankImage=0,
+rankImageTx=1,
+rankTx=2,
+xmBGIcon=3,
+xmIcon=4,
+xmKuangIcon=5,
+xmName=6,
+score=7,
+rewardList=8,
+noReward=9,
+serverName=10,
+rewardView=11,
+noGuild=12,
+}
+local _item1Cmp={
+rankImage=0,
+rankImageTx=1,
+rankTx=2,
+playerList=3,
+score=4,
+rewardList=5,
+noPlayer=6,
+rewardView=7,
+}
+local _item2Cmp={
+rankImage=0,
+rankImageTx=1,
+rankTx=2,
+xmList=3,
+score=4,
+rewardList=5,
+noPlayer=6,
+rewardView=7,
+}
+local tips1Pos={
+{295,187},
+{185,187},
+}
+local _abName="ui/windows/zhengtaomojiang/zhengtaomojiang_info_atlas_pak.ab"
+
+
+
+function UIMoJieZhenTaiRankWin:onLoaded(...)
+self:bindComponents()
+_this=self
+
+self:addNotify(notifyConfig.onSeasonChange,self.onSeasonChange)
+self:addNotify(notifyConfig.onSeasonStageChange,self.onSeasonStageChange)
+self:addProNotify(39,35,self.on_39_35)
+self:addProNotify(39,36,self.on_39_36)
+
+self.ownerWidget={}
+for i,v in ipairs(self.owner)do
+local widget=v:getChildWidgetBase()
+self.ownerWidget[i]=widget
+end
+
+self.dataCache={}
+self.cdItems={}
+end
+
+
+function UIMoJieZhenTaiRankWin:__delete()
+self:unbindComponents()
+_this=nil
+
+self:stopCDTick()
+end
+
+
+
+
+function UIMoJieZhenTaiRankWin:onShow(argtable,afterOnloaded)
+if afterOnloaded then
+self.root:setChildCanvasGroupAlpha(0)
+self.root:setChildCanvasGroupDOFade(1,0.6)
+end
+self.parentWin=argtable.parentWin
+self.seasonType=argtable.handleType
+self.stageIndex=argtable.stageIdx
+self.build_id=argtable.build_id
+self.stageCfg=seasonModel:getStageConfigEx(self.seasonType,self.stageIndex)
+
+self:reqRankDatas()
+self:updateDatas()
+self:refreshMonsterList()
+self:refreshTypeList()
+self:refreshRankList()
+end
+
+
+
+function UIMoJieZhenTaiRankWin:onBackground()
+self:onCloseBtn()
+end
+
+
+function UIMoJieZhenTaiRankWin:onCloseBtn()
+if self.parentWin then
+self.parentWin:closeWindow(self.__name)
+else
+self:closeSelf()
+end
+end
+
+function UIMoJieZhenTaiRankWin:onStartAction()
+end
+
+function UIMoJieZhenTaiRankWin:onFreshAction(index,widget)
+local cfg=self.rankCfg[index]
+local minRank=cfg[1]
+local maxRank=cfg[2]
+
+
+
+
+local number=maxRank-minRank+1
+local multi=number>1
+local showRankImage=not multi and 1<=minRank and minRank<=3
+widget:SetChildActive(_item1Cmp.rankImage,showRankImage)
+widget:SetChildActive(_item1Cmp.rankTx,not showRankImage)
+if showRankImage then
+widget:SetChildCSImageSprite(_item1Cmp.rankImage,globalABLookup.global,'icon_phbmingci_'..minRank)
+widget:SetChildText(_item1Cmp.rankImageTx,minRank)
+elseif minRank==maxRank then
+widget:SetChildText(_item1Cmp.rankTx,tostring(minRank))
+else
+widget:SetChildText(_item1Cmp.rankTx,FMT.fmt("{0}~{1}",minRank,maxRank))
+end
+local rankDatas={}
+for i=1,math.min(number,4)do
+table.insert(rankDatas,self.rankList[minRank+i-1])
+end
+local rankCnt=#rankDatas
+widget:SetChildLayoutGroupCreateItems(_item1Cmp.playerList,rankCnt,function(index)
+local item=widget:GetChildLayoutGroupGridItem(_item1Cmp.playerList,index-1)
+local rankData=rankDatas[index]
+playerController:setHeadIcon(item,1,{iconInfo=rankData.iconInfo})
+local nameStr=""
+local serverStr=""
+if not multi then
+nameStr=playerModel:checkActorId(rankData.actor_id)and FMT.cfmt(FONT_COLOR.eGreenColor,rankData.actor_name)or rankData.actor_name
+serverStr=FMT.fmt("[{0}]",loginModel:getServerName(rankData.server_id))
+serverStr=playerModel:checkActorId(rankData.actor_id)and FMT.cfmt(FONT_COLOR.eGreenColor,serverStr)or serverStr
+end
+item:SetChildText(2,nameStr)
+item:SetChildText(3,serverStr)
+item:SetChildButtonClick(0,function()
+self:onClickPlayer(rankData)
+end)
+end)
+widget:SetChildActive(_item1Cmp.noPlayer,rankCnt<=0)
+
+local scoreStr=nil
+if not multi then
+scoreStr="暂无"
+if rankDatas[1]then
+scoreStr=tostring(rankDatas[1].score)
+scoreStr=playerModel:checkActorId(rankDatas[1].actor_id)and FMT.cfmt(FONT_COLOR.eGreenColor,scoreStr)or scoreStr
+end
+else
+scoreStr=next(rankDatas)==nil and"暂无"or""
+end
+widget:SetChildText(_item1Cmp.score,scoreStr)
+local rewards=cfg[3]
+
+widget:SetChildLayoutGroupCreateItems(_item1Cmp.rewardList,#rewards,function(index)
+local item=widget:GetChildLayoutGroupGridItem(_item1Cmp.rewardList,index-1)
+local rewardData=rewards[index]
+local itemId=rewardData[1]
+local itemNum=rewardData[2]
+local showCountBG=itemNum>1
+local countStr=showCountBG and mathHelper.formatNumber(itemNum)or""
+local _conf={itemid=itemId,itemcount=countStr,showCountBG=showCountBG,showname=false,showStage=true}
+local _prop=itemsComponentHelper.getCommonFillDataSmall(_conf)
+item:SetChildPropData(-1,_prop)
+item:SetBaseItemClickEvent(-1,itemsComponentHelper.onItemClickEx)
+end)
+widget:SetChildAnchoredPos(_item1Cmp.rewardList,0,0)
+widget:SetChildScrollRectEnable(_item1Cmp.rewardView,#rewards>=5)
+end
+
+function UIMoJieZhenTaiRankWin:onStartAction_2()
+
+end
+
+function UIMoJieZhenTaiRankWin:onFreshAction_2(index,widget)
+local nowTime=timeHelper.getServerShortTime()
+local cfg=self.rankCfg[index]
+local minRank=cfg[1]
+local maxRank=cfg[2]
+
+
+
+
+local number=maxRank-minRank+1
+local multi=number>1
+local showRankImage=not multi and 1<=minRank and minRank<=3
+widget:SetChildActive(_item2Cmp.rankImage,showRankImage)
+widget:SetChildActive(_item2Cmp.rankTx,not showRankImage)
+if showRankImage then
+widget:SetChildCSImageSprite(_item2Cmp.rankImage,globalABLookup.global,'icon_phbmingci_'..minRank)
+widget:SetChildText(_item2Cmp.rankImageTx,minRank)
+elseif minRank==maxRank then
+widget:SetChildText(_item2Cmp.rankTx,tostring(minRank))
+else
+widget:SetChildText(_item2Cmp.rankTx,FMT.fmt("{0}~{1}",minRank,maxRank))
+end
+
+local rankDatas={}
+for i=1,math.min(number,4)do
+table.insert(rankDatas,self.rankList[minRank+i-1])
+end
+local rankCnt=#rankDatas
+widget:SetChildLayoutGroupCreateItems(_item2Cmp.xmList,rankCnt,function(index)
+local item=widget:GetChildLayoutGroupGridItem(_item2Cmp.xmList,index-1)
+local rankData=rankDatas[index]
+local image=rankData.guildicon>0 and xianmengModel.splitGuildIcon(rankData.guildicon)or xianmengModel:getDefualtGuildIamge()
+local abname=globalABLookup.xianmengicons
+item:SetChildCSImageSprite(1,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eIcon,image.icon,'icon'))
+item:SetChildCSImageSprite(0,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eBG,image.bg,'icon'))
+item:SetChildCSImageSprite(2,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eKuang,image.kuang,'icon'))
+local nameStr=""
+local serverStr=""
+if not multi then
+nameStr=rankData.guildname~=""and rankData.guildname or"神秘仙盟"
+nameStr=rankData.guildname~=""and xianmengModel:isMyXM2(rankData.guildid)and FMT.cfmt(FONT_COLOR.eGreenColor,nameStr)or nameStr
+serverStr=""
+if rankData.guildname~=""then
+serverStr=FMT.fmt("[{0}]",loginModel:getServerName(rankData.leaderserverid))
+serverStr=xianmengModel:isMyXM2(rankData.guildid)and FMT.cfmt(FONT_COLOR.eGreenColor,serverStr)or serverStr
+end
+end
+item:SetChildText(3,nameStr)
+item:SetChildText(4,serverStr)
+item:SetChildButtonClick(0,function()
+self:onClickXM(rankData)
+end)
+end)
+widget:SetChildActive(_item2Cmp.noPlayer,rankCnt<=0)
+
+local scoreStr=nil
+if not multi then
+scoreStr="暂无"
+if rankDatas[1]then
+scoreStr=tostring(rankDatas[1].score)
+scoreStr=xianmengModel:isMyXM2(rankDatas[1].guildid)and FMT.cfmt(FONT_COLOR.eGreenColor,scoreStr)or scoreStr
+end
+else
+scoreStr=next(rankDatas)==nil and"暂无"or""
+end
+widget:SetChildText(_item2Cmp.score,scoreStr)
+
+local rewards=cfg[3]
+
+local stateRewardCnt=#self.stateRewards
+local showCnt=stateRewardCnt+#rewards
+if self.cdItems[index]==nil then
+self.cdItems[index]={}
+else
+table.clear(self.cdItems[index])
+end
+local build_id=self.monsterDatas[self.monsterSelect].id
+local entityData=xianjieModel:getZhenTaiEntity(self.seasonType,self.stageIndex,build_id)
+widget:SetChildLayoutGroupCreateItems(_item2Cmp.rewardList,showCnt,function(idx)
+local item=widget:GetChildLayoutGroupGridItem(_item2Cmp.rewardList,idx-1)
+local rewardData=idx<=stateRewardCnt and self.stateRewards[idx]or rewards[idx-stateRewardCnt]
+local itemId=rewardData[1]
+local itemNum=rewardData[2]
+local state=rewardData[3]
+local showCountBG=itemNum>1
+local countStr=showCountBG and mathHelper.formatNumber(itemNum)or""
+local gray=0
+local haveState=false
+if haveState then
+if entityData.killTime<=0 and nowTime>=state.endTime then
+gray=1
+elseif entityData.killTime>0 and entityData.killTime>=state.endTime then
+gray=1
+end
+end
+local _conf={itemid=itemId,itemcount=countStr,showCountBG=showCountBG,showname=false,showStage=true,gray=gray}
+local _prop=itemsComponentHelper.getCommonFillDataSmall(_conf)
+item:SetChildPropData(0,_prop)
+item:SetBaseItemClickEvent(0,itemsComponentHelper.onItemClickEx)
+if haveState then
+local showTx=false
+if state.corner~=nil and state.corner~=""then
+item:SetChildCSImageSprite(1,_abName,state.corner)
+else
+item:SetChildCSImageIcon(1,"",true)
+end
+item:SetChildText(2,state.name)
+if nowTime>=state.openTime then
+if entityData.killTime<=0 then
+if nowTime<state.endTime then
+item:SetChildText(4,FMT.cfmt3('a1ec58',timeHelper.format_time_stamp3(state.endTime-nowTime)))
+self.cdItems[index][idx]={openTime=state.openTime,endTime=state.endTime,state=2}
+showTx=true
+else
+item:SetChildText(4,"无法获得")
+showTx=true
+end
+else
+if entityData.killTime>=state.endTime then
+item:SetChildText(4,"无法获得")
+showTx=true
+else
+item:SetChildText(4,"已获得")
+end
+end
+else
+if nowTime<state.endTime then
+self.cdItems[index][idx]={openTime=state.openTime,endTime=state.endTime,state=1}
+else
+item:SetChildText(4,"无法获得")
+showTx=true
+end
+end
+item:SetChildActive(3,showTx)
+else
+item:SetChildCSImageIcon(1,"",true)
+item:SetChildText(2,"")
+item:SetChildActive(3,false)
+end
+end)
+widget:SetChildAnchoredPos(_item2Cmp.rewardList,0,0)
+widget:SetChildScrollRectEnable(_item2Cmp.rewardView,showCnt>=5)
+end
+
+function UIMoJieZhenTaiRankWin:refreshTypeList()
+self.typeList:setChildLayoutGroupCreateItems(#_typeDatas,function(index)
+local item=self.typeList:getChildLayoutGroupGridItem(index-1)
+local typeData=_typeDatas[index]
+item:SetChildButtonClick(_typeCmp.root,function()
+self:onClickType(index)
+end)
+item:SetChildText(_typeCmp.name,typeData.name)
+item:SetChildActive(_typeCmp.select,self.typeSelect==index)
+item:SetChildScale(-1,index==2 and Vector3(-1,1,1)or Vector3(1,1,1))
+item:SetChildScale(_typeCmp.name,index==2 and Vector3(-1,1,1)or Vector3(1,1,1))
+end)
+end
+
+function UIMoJieZhenTaiRankWin:onClickType(index)
+if self.typeSelect~=index then
+if self.typeSelect then
+local item=self.typeList:getChildLayoutGroupGridItem(self.typeSelect-1)
+item:SetChildActive(_typeCmp.select,false)
+end
+
+self.typeSelect=index
+
+local item=self.typeList:getChildLayoutGroupGridItem(self.typeSelect-1)
+item:SetChildActive(_typeCmp.select,true)
+
+self:refreshRankList()
+end
+end
+
+function UIMoJieZhenTaiRankWin:updateDatas()
+self.monsterDatas={}
+local client_build_list=self.stageCfg.client_build_list
+for build_id,client_build_id in ipairs(client_build_list)do
+local max_finish_cnt=self.stageCfg.fix_conf[build_id]
+table.insert(self.monsterDatas,{id=build_id,client_build_id=client_build_id,max_finish_cnt=max_finish_cnt})
+end
+
+if self.build_id then
+for i,v in ipairs(self.monsterDatas)do
+if v.id==self.build_id then
+self.monsterSelect=i
+break
+end
+end
+end
+
+self.monsterSelect=self.monsterSelect or 1
+self.typeSelect=self.typeSelect or 1
+end
+
+function UIMoJieZhenTaiRankWin:reqRankDatas()
+local client_build_list=self.stageCfg.client_build_list
+for i,v in ipairs(_typeDatas)do
+local rankType=v.type
+for build_id=1,#client_build_list do
+xianjieController:reqZhenTaiRankDataList(self.seasonType,self.stageIndex,build_id,rankType)
+end
+end
+end
+
+function UIMoJieZhenTaiRankWin:refreshMonsterList()
+self.monsterList:setChildLayoutGroupCreateItems(#self.monsterDatas,function(index)
+local item=self.monsterList:getChildLayoutGroupGridItem(index-1)
+local build_id=self.monsterDatas[index].id
+local client_build_id=self.monsterDatas[index].client_build_id
+local buildCfg=cfgHelper.get1(cfg_fairylandclientbuildconfig_get,client_build_id)
+local entity=xianjieModel:getZhenTaiEntity(self.seasonType,self.stageIndex,build_id)
+local max_finish_cnt=self.monsterDatas[index].max_finish_cnt
+local flag=entity.finish_cnt>=max_finish_cnt
+item:SetChildButtonClick(_monsterCmp.root,function()
+self:onClickMonster(index)
+end)
+item:SetChildText(_monsterCmp.name,buildCfg.name)
+item:SetChildActive(_monsterCmp.flag,flag)
+item:SetChildActive(_monsterCmp.select,self.monsterSelect==index)
+end)
+end
+
+function UIMoJieZhenTaiRankWin:refreshMonstersFlag()
+for i,v in ipairs(self.monsterDatas)do
+local item=self.monsterList:getChildLayoutGroupGridItem(i-1)
+local build_id=v.id
+local entity=xianjieModel:getZhenTaiEntity(self.seasonType,self.stageIndex,build_id)
+local max_finish_cnt=v.max_finish_cnt
+local flag=entity.finish_cnt>=max_finish_cnt
+item:SetChildActive(_monsterCmp.flag,flag)
+end
+end
+
+function UIMoJieZhenTaiRankWin:onClickMonster(index)
+if self.monsterSelect~=index then
+if self.monsterSelect then
+local item=self.monsterList:getChildLayoutGroupGridItem(self.monsterSelect-1)
+item:SetChildActive(_monsterCmp.select,false)
+end
+
+self.monsterSelect=index
+
+local item=self.monsterList:getChildLayoutGroupGridItem(self.monsterSelect-1)
+item:SetChildActive(_monsterCmp.select,true)
+
+self:refreshRankList()
+end
+end
+
+function UIMoJieZhenTaiRankWin:refreshRankList()
+local temp=self.dataCache[self.monsterSelect]
+if temp==nil then
+temp={}
+self.dataCache[self.monsterSelect]=temp
+end
+local typeData=_typeDatas[self.typeSelect]
+local rankType=typeData.type
+local rankData=temp[self.typeSelect]
+local monsterData=self.monsterDatas[self.monsterSelect]
+local build_id=monsterData.id
+if rankData==nil then
+xianjieController:reqZhenTaiRankDataList(self.seasonType,self.stageIndex,build_id,rankType)
+rankData=xianjieModel:getZhenTaiRank(self.seasonType,self.stageIndex,build_id,rankType)
+temp[self.typeSelect]=rankData
+end
+self.maxRankScore=0
+if typeData.anyRankType then
+for monsterSelect=1,#self.monsterDatas do
+local temp=self.dataCache[monsterSelect]
+if temp then
+local rankData=temp[typeData.anyRankType]
+local rankScore=rankData and rankData[3]or 0
+self.maxRankScore=math.max(self.maxRankScore,rankScore)
+end
+end
+end
+self.rankList=rankData and rankData[1]or defaultT
+local rankNum=rankData and rankData[2]or 0
+local rankScore=rankData and rankData[3]or 0
+local panelType=typeData.panel
+local rankItem=typeData.rankItem
+for i,v in ipairs(self.panel)do
+v:setActive(i==panelType)
+end
+local cfgName=typeData.colName
+local isDrop=typeData.isDrop
+local stage=seasonModel:getStage(self.seasonType,self.stageIndex)
+local stageCfg=self.stageCfg
+self.rankCfg={}
+local createList={}
+self.ownerRewards=nil
+local last=0
+local entityData=xianjieModel:getZhenTaiEntity(self.seasonType,self.stageIndex,build_id)
+local rankInfo=stageCfg[cfgName][build_id]or defaultT
+for i,v in ipairs(rankInfo)do
+local rewards=v[3]
+if isDrop then
+rewards=v[3]>0 and cfgHelper.get2(cfg_awardconfig_get,v[3],"showItems")or defaultT
+end
+local lower,upper=v[1],v[2]
+local split=v[4]==1
+if split then
+local index=#self.rankCfg
+for idx=lower,upper do
+index=index+1
+table.insert(self.rankCfg,{idx,idx,rewards})
+table.insert(createList,index)
+end
+else
+local index=#self.rankCfg+1
+table.insert(self.rankCfg,{lower,upper,rewards})
+table.insert(createList,index)
+end
+
+if self.ownerRewards==nil and rankNum>0 and rankNum>=lower and rankNum<=upper then
+self.ownerRewards=rewards
+end
+end
+
+local cfgName=typeData.defName
+local defaultReward=stageCfg[cfgName][build_id]
+if self.ownerRewards==nil and defaultReward~=nil and(rankScore>0 or self.maxRankScore>0)then
+if isDrop then
+if defaultReward>0 then
+self.ownerRewards=cfgHelper.get2(cfg_awardconfig_get,defaultReward,"showItems")
+end
+else
+self.ownerRewards=defaultReward
+end
+end
+self.stateRewards=typeData.getStateRewawrds(self,build_id,stageCfg,stage.beginTime)
+typeData.refreshOwner(self,rankNum,rankScore)
+self.scrollView[panelType]:initData(rankItem,createList,#createList)
+end
+
+function UIMoJieZhenTaiRankWin:refreshOwner1(num,score)
+local widget=self.ownerWidget[1]
+local showRankImage=1<=num and num<=3
+widget:SetChildActive(_owner1Cmp.rankImage,showRankImage)
+widget:SetChildActive(_owner1Cmp.rankTx,not showRankImage)
+if showRankImage then
+widget:SetChildCSImageSprite(_owner1Cmp.rankImage,globalABLookup.global,'icon_phbmingci_'..num)
+widget:SetChildText(_owner1Cmp.rankImageTx,num)
+else
+widget:SetChildText(_owner1Cmp.rankTx,num>0 and num or"未上榜")
+end
+playerController:setHeadIcon(widget,_owner1Cmp.head,{})
+widget:SetChildText(_owner1Cmp.playerName,playerModel:getActorName())
+widget:SetChildText(_owner1Cmp.serverName,FMT.fmt("[{0}]",loginModel:getMyServerName()))
+widget:SetChildText(_owner1Cmp.score,tostring(score))
+
+local rewardCnt=self.ownerRewards~=nil and#self.ownerRewards or 0
+widget:SetChildLayoutGroupCreateItems(_owner1Cmp.rewardList,rewardCnt,function(index)
+local item=widget:GetChildLayoutGroupGridItem(_owner1Cmp.rewardList,index-1)
+local rewardData=self.ownerRewards[index]
+local itemId=rewardData[1]
+local itemNum=rewardData[2]
+local showCountBG=itemNum>1
+local countStr=showCountBG and mathHelper.formatNumber(itemNum)or""
+local _conf={itemid=itemId,itemcount=countStr,showCountBG=showCountBG,showname=false,showStage=true}
+local _prop=itemsComponentHelper.getCommonFillDataSmall(_conf)
+item:SetChildPropData(-1,_prop)
+item:SetBaseItemClickEvent(-1,itemsComponentHelper.onItemClickEx)
+end)
+widget:SetChildActive(_owner1Cmp.noReward,self.ownerRewards==nil or#self.ownerRewards<0)
+widget:SetChildAnchoredPos(_owner1Cmp.rewardList,0,0)
+widget:SetChildScrollRectEnable(_owner1Cmp.rewardView,rewardCnt>=5)
+end
+
+function UIMoJieZhenTaiRankWin:refreshOwner2(num,score)
+local widget=self.ownerWidget[2]
+local showRankImage=1<=num and num<=3
+widget:SetChildActive(_owner2Cmp.rankImage,showRankImage)
+widget:SetChildActive(_owner2Cmp.rankTx,not showRankImage)
+if showRankImage then
+widget:SetChildCSImageSprite(_owner2Cmp.rankImage,globalABLookup.global,'icon_phbmingci_'..num)
+widget:SetChildText(_owner2Cmp.rankImageTx,num)
+else
+widget:SetChildText(_owner2Cmp.rankTx,num>0 and num or"未上榜")
+end
+
+local xmData=xianmengModel:getMyXMDetialData()
+if xmData then
+local image=xianmengModel.splitGuildIcon(xmData.guildicon)
+local abname=globalABLookup.xianmengicons
+widget:SetChildCSImageSprite(_owner2Cmp.xmIcon,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eIcon,image.icon,'icon'))
+widget:SetChildCSImageSprite(_owner2Cmp.xmBGIcon,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eBG,image.bg,'icon'))
+widget:SetChildCSImageSprite(_owner2Cmp.xmKuangIcon,abname,cfgHelper.get3(cfg_guildiconconfig_get,xianmengIconType.eKuang,image.kuang,'icon'))
+widget:SetChildText(_owner2Cmp.xmName,xmData.guildname)
+widget:SetChildText(_owner2Cmp.serverName,FMT.fmt("[{0}]",loginModel:getServerName(xmData.leaderserverid)))
+widget:SetChildActive(_owner2Cmp.noGuild,false)
+else
+widget:SetChildCSImageIcon(_owner2Cmp.xmIcon,"",false)
+widget:SetChildCSImageIcon(_owner2Cmp.xmBGIcon,"",false)
+widget:SetChildCSImageIcon(_owner2Cmp.xmKuangIcon,"",false)
+widget:SetChildText(_owner2Cmp.xmName,"")
+widget:SetChildText(_owner2Cmp.serverName,"")
+widget:SetChildActive(_owner2Cmp.noGuild,true)
+end
+
+widget:SetChildText(_owner2Cmp.score,tostring(score))
+
+local stateRewardCnt=#self.stateRewards
+local showCnt=0
+local rewardCnt=self.ownerRewards~=nil and#self.ownerRewards or 0
+if rewardCnt>0 then
+showCnt=stateRewardCnt+rewardCnt
+end
+local nowTime=timeHelper.getServerShortTime()
+if self.cdItems[0]==nil then
+self.cdItems[0]={}
+else
+table.clear(self.cdItems[0])
+end
+local build_id=self.monsterDatas[self.monsterSelect].id
+local entityData=xianjieModel:getZhenTaiEntity(self.seasonType,self.stageIndex,build_id)
+widget:SetChildLayoutGroupCreateItems(_owner2Cmp.rewardList,showCnt,function(index)
+local item=widget:GetChildLayoutGroupGridItem(_owner2Cmp.rewardList,index-1)
+local rewardData=index<=stateRewardCnt and self.stateRewards[index]or self.ownerRewards[index-stateRewardCnt]
+local itemId=rewardData[1]
+local itemNum=rewardData[2]
+local state=rewardData[3]
+local showCountBG=itemNum>1
+local countStr=showCountBG and mathHelper.formatNumber(itemNum)or""
+local gray=0
+local haveState=false
+if haveState then
+if entityData.killTime<=0 and nowTime>=state.endTime then
+gray=1
+elseif entityData.killTime>0 and entityData.killTime>=state.endTime then
+gray=1
+end
+end
+local _conf={itemid=itemId,itemcount=countStr,showCountBG=showCountBG,showname=false,showStage=true,gray=gray}
+local _prop=itemsComponentHelper.getCommonFillDataSmall(_conf)
+item:SetChildPropData(0,_prop)
+item:SetBaseItemClickEvent(0,itemsComponentHelper.onItemClickEx)
+if haveState then
+local showTx=false
+if state.corner~=nil and state.corner~=""then
+item:SetChildCSImageSprite(1,_abName,state.corner)
+else
+item:SetChildCSImageIcon(1,"",true)
+end
+item:SetChildText(2,state.name)
+if nowTime>=state.openTime then
+if entityData.killTime<=0 then
+if nowTime<state.endTime then
+item:SetChildText(4,FMT.cfmt3('a1ec58',timeHelper.format_time_stamp3(state.endTime-nowTime)))
+self.cdItems[0][index]={openTime=state.openTime,endTime=state.endTime,state=2}
+showTx=true
+else
+item:SetChildText(4,"无法获得")
+showTx=true
+end
+else
+if entityData.killTime>=state.endTime then
+item:SetChildText(4,"无法获得")
+showTx=true
+else
+item:SetChildText(4,"已获得")
+end
+end
+else
+if nowTime<state.endTime then
+self.cdItems[0][index]={openTime=state.openTime,endTime=state.endTime,state=1}
+else
+item:SetChildText(4,"无法获得")
+showTx=true
+end
+end
+item:SetChildActive(3,showTx)
+else
+item:SetChildCSImageIcon(1,"",true)
+item:SetChildText(2,"")
+item:SetChildActive(3,false)
+end
+end)
+widget:SetChildScrollRectEnable(_owner2Cmp.rewardView,showCnt>=5)
+widget:SetChildAnchoredPos(_owner2Cmp.rewardList,0,0)
+widget:SetChildActive(_owner2Cmp.noReward,showCnt<=0)
+end
+
+function UIMoJieZhenTaiRankWin:startCDTick()
+if self.cdTick==nil then
+self.cdTick=self:setTimer(1,0,function()
+self:updateCDTick()
+end)
+end
+end
+
+function UIMoJieZhenTaiRankWin:stopCDTick()
+if self.cdTick then
+self:stopTimerByID(self.cdTick)
+self.cdTick=nil
+end
+end
+
+function UIMoJieZhenTaiRankWin:refreshCDItem(index1,index2,item,nowTime,info)
+if info.state==1 then
+if nowTime>=info.openTime then
+self.cdItems[index1][index2].state=2
+
+if nowTime<info.endTime then
+item:SetChildText(4,FMT.cfmt3('a1ec58',timeHelper.format_time_stamp3(info.endTime-nowTime)))
+else
+item:SetChildText(4,"无法获得")
+
+local prop={}
+prop[PropIndex(DataPropKey.eWidgetGray,0)]=true
+prop[PropIndex(DataPropKey.eWidgetGray,1)]=true
+prop[PropIndex(DataPropKey.eWidgetActive,7)]=true
+item:SetChildPropData(0,prop)
+
+self.cdItems[index1][index2]=nil
+end
+end
+else
+if nowTime<info.endTime then
+item:SetChildText(4,FMT.cfmt3('a1ec58',timeHelper.format_time_stamp3(info.endTime-nowTime)))
+else
+item:SetChildText(4,"无法获得")
+
+local prop={}
+prop[PropIndex(DataPropKey.eWidgetGray,0)]=true
+prop[PropIndex(DataPropKey.eWidgetGray,1)]=true
+prop[PropIndex(DataPropKey.eWidgetActive,7)]=true
+item:SetChildPropData(0,prop)
+
+self.cdItems[index1][index2]=nil
+end
+end
+end
+
+function UIMoJieZhenTaiRankWin:updateCDTick()
+local nowTime=timeHelper.getServerShortTime()
+for i,v in pairs(self.cdItems)do
+if next(v)then
+if i>0 then
+local widget=self.scrollView[2]:getItemWidget(i)
+if widget then
+for j,w in pairs(v)do
+local item=widget:GetChildLayoutGroupGridItem(_item2Cmp.rewardList,j-1)
+self:refreshCDItem(i,j,item,nowTime,w)
+end
+end
+else
+local widget=self.ownerWidget[2]
+for j,w in pairs(v)do
+local item=widget:GetChildLayoutGroupGridItem(_owner2Cmp.rewardList,j-1)
+self:refreshCDItem(i,j,item,nowTime,w)
+end
+end
+end
+end
+end
+
+function UIMoJieZhenTaiRankWin:onClickPlayer(playerData)
+otherPlayerController:openOtherPlayerInfoWin(playerData.actor_id,nil,nil,{serverid=playerData.server_id,isXianJie=true})
+end
+
+function UIMoJieZhenTaiRankWin:onClickXM(xmData)
+if mathHelper.validInt64(xmData.guildid)and xmData.guildname~=nil and xmData.guildicon>0 then
+local _xmData=xianjieModel:getXianMengData(xmData.guildid)
+if _xmData then
+local isOther=xianjienSceneIndexType:isOhterXianYu(_xmData.ownersceneidx)
+if not isOther then
+local wincfg=UIManager.get_window_config(self.__name)
+xianmengController:openXMDetailInfoWin(xmData.guildid,wincfg.canvas+1)
+else
+UIManager.error('不同仙域的仙盟，无法探知其信息')
+end
+return
+end
+end
+UIManager.info("不可知的神秘仙盟")
+end
+
+function UIMoJieZhenTaiRankWin.on_39_35(args)
+local seasonType=args[1]
+local stageIndex=args[2]
+local build_id=args[7]
+if _this.seasonType==seasonType and _this.stageIndex==stageIndex then
+
+
+local typeData=_typeDatas[_this.typeSelect]
+local rankType=typeData.type
+if not _this.dataCache[build_id]then
+_this.dataCache[build_id]={}
+end
+if rankType==1 and _this.dataCache[build_id]then
+_this.dataCache[build_id][_this.typeSelect]=xianjieModel:getZhenTaiRank(seasonType,stageIndex,build_id,rankType)
+_this:refreshRankList()
+end
+
+end
+end
+
+function UIMoJieZhenTaiRankWin.on_39_36(args)
+local seasonType=args[1]
+local stageIndex=args[2]
+local build_id=args[7]
+if _this.seasonType==seasonType and _this.stageIndex==stageIndex then
+
+
+local typeData=_typeDatas[_this.typeSelect]
+local rankType=typeData.type
+if not _this.dataCache[build_id]then
+_this.dataCache[build_id]={}
+end
+if rankType==2 and _this.dataCache[build_id]then
+_this.dataCache[build_id][_this.typeSelect]=xianjieModel:getZhenTaiRank(seasonType,stageIndex,build_id,rankType)
+_this:refreshRankList()
+end
+
+end
+end
+
+function UIMoJieZhenTaiRankWin.onSeasonChange()
+local stage=seasonModel:getStage(_this.seasonType,_this.stageIndex)
+if not stage then
+_this:onCloseBtn()
+else
+_this:refreshMonstersFlag()
+end
+end
+
+function UIMoJieZhenTaiRankWin.onSeasonStageChange(seasonType,stageIndex)
+if _this.seasonType==seasonType and _this.stageIndex==stageIndex then
+_this:refreshMonstersFlag()
+end
+end

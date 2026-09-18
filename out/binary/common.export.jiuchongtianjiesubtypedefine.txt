@@ -1,0 +1,13 @@
+
+JIUCHONGTIANJIE_SUB_SYS_TYPE=
+{
+eSiFangPingYao=1,
+eHongChenJie=2,
+eZongMenDaoShi=3,
+eZhuXianTai=4,
+eDuJieZhiBao=5,
+eDuJieXianDan=6,
+eTianMoJie=7,
+eXinMoJie=8,
+eXianJieJieYin=9,
+}

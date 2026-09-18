@@ -1,0 +1,9 @@
+xianjieForceType=
+{
+eYuJing=1,
+eXianGong=2,
+ePengLai=3,
+eJiuYuan=4,
+}
+
+

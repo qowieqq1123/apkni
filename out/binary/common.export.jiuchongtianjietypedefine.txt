@@ -1,0 +1,7 @@
+
+JIUCHONGTIANJIE_SYS_TYPE=
+{
+eZhanChenYuan=1,
+eZhuXianTai=2,
+eZhuXieMo=3,
+}

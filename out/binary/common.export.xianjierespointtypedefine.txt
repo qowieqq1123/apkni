@@ -1,0 +1,10 @@
+
+XJ_ResPoint_TYPE=
+{
+eMonster=1,
+eEvent=2,
+eNPC=3,
+eMystery=4,
+eCollectible=5,
+eCtCollectible=6,
+}

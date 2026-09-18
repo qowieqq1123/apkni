@@ -1,0 +1,437 @@
+﻿Il2Cpp 符号提取报告
+============================================================
+
+一、网络协议相关类
+------------------------------------------------------------
+
+  internal  class AixNetworkInterfaceAPI
+
+  private  struct AsyncProtocolRequest.<InnerRead>d__25
+    字段 (1):
+      CancellationToken cancellationToken
+
+  private  struct AsyncProtocolRequest.<ProcessOperation>d__24
+    字段 (1):
+      CancellationToken cancellationToken
+
+  private  struct AsyncProtocolRequest.<StartOperation>d__23
+    字段 (1):
+      CancellationToken cancellationToken
+
+  internal  class AsyncProtocolResult  [TypeDefIndex: 7386]
+
+  private  struct ClientWebSocket.<ConnectAsyncCore>d__16
+    字段 (2):
+      Uri uri
+      CancellationToken cancellationToken
+
+  public  class DebugNetworkGraph
+    字段 (2):
+      int LAST_S_UPLOADED
+      int LAST_S_DOWNLOADED
+
+  private  class DelegateFactory.NetWorkUnit_NetworkManagerBase_OnSocketErrorEventDelegate_Event
+
+  private  class DelegateFactory.NetWorkUnit_NetworkManagerBase_OnSocketTimeoutDelegate_Event
+
+  internal  class FreeBSDNetworkInterfaceAPI
+
+  public  interface INetProtocolInterface  [TypeDefIndex: 6879]
+
+  public  interface IWebSocket  [TypeDefIndex: 11913]
+
+  internal  class LinuxNetworkInterfaceAPI
+
+  public  struct LuaArgsProtocol  [TypeDefIndex: 196]
+    字段 (2):
+      byte type
+      string value
+
+  public  class Lua_NetworkHelperWrap  [TypeDefIndex: 732]
+
+  internal  class MacOsNetworkInterfaceAPI
+
+  private  struct ManagedWebSocket.<CloseWithReceiveErrorAndThrowAsync>d__66
+    字段 (3):
+      WebSocketCloseStatus closeStatus
+      WebSocketError error
+      Exception innerException
+
+  private  struct ManagedWebSocket.<EnsureBufferContainsAsync>d__71
+    字段 (3):
+      int minimumRequiredBytes
+      CancellationToken cancellationToken
+      bool throwOnPrematureClosure
+
+  private  struct ManagedWebSocket.<HandleReceivedCloseAsync>d__62
+    字段 (2):
+      ManagedWebSocket.MessageHeader header
+      CancellationToken cancellationToken
+
+  private  struct ManagedWebSocket.<HandleReceivedPingPongAsync>d__64
+    字段 (2):
+      ManagedWebSocket.MessageHeader header
+      CancellationToken cancellationToken
+
+  private  struct ManagedWebSocket.<ReceiveAsyncPrivate>d__61<TWebSocketReceiveResultGetter,
+    字段 (3):
+      CancellationToken cancellationToken
+      TWebSocketReceiveResultGetter resultGetter
+      Memory<byte> payloadBuffer
+
+  private  struct ManagedWebSocket.<SendCloseFrameAsync>d__69
+    字段 (3):
+      string closeStatusDescription
+      WebSocketCloseStatus closeStatus
+      CancellationToken cancellationToken
+
+  private  struct ManagedWebSocket.<SendFrameFallbackAsync>d__56
+    字段 (4):
+      ManagedWebSocket.MessageOpcode opcode
+      bool endOfMessage
+      ReadOnlyMemory<byte> payloadBuffer
+      CancellationToken cancellationToken
+
+  private  struct ManagedWebSocket.<WaitForServerToCloseConnectionAsync>d__63
+    字段 (1):
+      CancellationToken cancellationToken
+
+  private  struct ManagedWebSocket.<WaitForWriteTaskAsync>d__55
+    字段 (1):
+      ValueTask writeTask
+
+  private  interface ManagedWebSocket.IWebSocketReceiveResultGetter<TResult>  [TypeDefIndex: 8028]
+
+  private  struct ManagedWebSocket.MessageHeader  [TypeDefIndex: 8027]
+
+  private  struct ManagedWebSocket.WebSocketReceiveResultGetter
+
+  public  class NetPacket
+
+  public  class NetTCP.NetPacketStream
+
+  public  class NetWebSocket
+    字段 (1):
+      uint connectionID
+
+  public  class NetWorkProtocolParser
+    常量:
+      STRUCT_RECV_PREFIX = 10000
+      STRUCT_SEND_PREFIX = 11000
+      GAMEATTR_PREFIX = 3000
+      CHATTR_RECV_MONSTER = 20003
+      CHATTR_RECV_ACTOR = 20004
+    字段 (1):
+      Queue<NetWorkProtocolParser.DataBlock> _pool
+
+  public  class NetWorkProtocolParser.DataBlock  [TypeDefIndex: 1656]
+    字段 (2):
+      string name
+      object data
+
+  public  class NetWorkProtocolParser.NetWorkProtocolInfo  [TypeDefIndex: 1654]
+    字段 (3):
+      NetWorkProtocolParser.Protocel netstruct
+      NetWorkProtocolParser.Protocel attrstruct
+      NetWorkProtocolParser.Protocel gameattr
+
+  public  class NetWorkProtocolParser.PFunction  [TypeDefIndex: 1660]
+    字段 (3):
+      string name
+      List<NetWorkProtocolParser.ProtocelParams> args
+      int id
+
+  public  class NetWorkProtocolParser.Protocel  [TypeDefIndex: 1659]
+    字段 (1):
+      int id
+
+  public  class NetWorkProtocolParser.ProtocelParams  [TypeDefIndex: 1658]
+    字段 (7):
+      string name
+      byte type
+      short count
+      byte subtype
+      int condition
+      NetWorkProtocolParser.ProtocelSkipParams condition_args
+      int typename_id
+
+  public  class NetWorkProtocolParser.ProtocelSkipParams  [TypeDefIndex: 1657]
+    字段 (2):
+      int index
+      List<int> args
+
+  private  class NetWorkService.PacketReport  [TypeDefIndex: 6900]
+    字段 (6):
+      byte sid
+      byte pid
+      int size
+      float timestamp
+      bool flag
+      Decimal ticks
+
+  public  class NetworkCredential
+
+  public  class NetworkDisplayer
+
+  public static class NetworkHelper  [TypeDefIndex: 1680]
+
+  public  class NetworkInformationException
+
+  internal static class NetworkInterfaceFactoryPal  [TypeDefIndex: 7956]
+
+  public  class NetworkManager
+
+  public  class NetworkManagerBase  [TypeDefIndex: 1674]
+    字段 (6):
+      List<NetworkManagerBase.ProtocoLogger> m_protocoLoggers
+      NetworkManagerBase.eSocketHelperState SocketState
+      string ServerIP
+      int ServerPort
+      bool LogRecv
+      float LastRecvTime
+
+  public  class NetworkManagerBase.ProtocoLogger  [TypeDefIndex: 1672]
+    字段 (7):
+      int sid
+      bool expend
+      string name
+      NetworkManagerBase.LogGetter recvGetter
+      NetworkManagerBase.LogGetter sendGetter
+      NetworkManagerBase.LogSetter recvSetter
+      NetworkManagerBase.LogSetter sendSetter
+
+  public  class NetworkStream
+    字段 (5):
+      Socket.TaskSocketAsyncEventArgs<Socket> TaskAccept
+      Socket.Int32TaskSocketAsyncEventArgs TaskReceive
+      Socket.Int32TaskSocketAsyncEventArgs TaskSend
+      Socket.AwaitableSocketAsyncEventArgs ValueTaskReceive
+      Socket.AwaitableSocketAsyncEventArgs ValueTaskSend
+
+  internal  class NetworkStreamWrapper
+
+  public  class Packet  [TypeDefIndex: 2237]
+    字段 (2):
+      PacketType type
+      int id
+
+  public  class PacketIO  [TypeDefIndex: 2239]
+
+  public static class PacketPool  [TypeDefIndex: 2238]
+
+  public  class PacketReader
+    字段 (2):
+      Action<string> logCallback
+      Action<string> errorLogCallback
+
+  public  class PacketWritter
+
+  public  struct PreLateUpdate.UpdateNetworkManager  [TypeDefIndex: 8624]
+
+  public  class ProtocolList<T>  [TypeDefIndex: 1553]
+
+  public  class ProtocolViolationException
+
+  internal  class RequestCacheProtocol  [TypeDefIndex: 7991]
+
+  public  class Socket
+
+  private  class Socket.TaskSocketAsyncEventArgs<TResult>
+
+  private  struct Socket.WSABUF  [TypeDefIndex: 7998]
+    字段 (6):
+      int len
+      IntPtr buf
+      SocketAsyncResult sockares
+      int sent_so_far
+      IOSelectorJob job
+      IntPtr handle
+
+  public  class SocketAddress  [TypeDefIndex: 7782]
+
+  public  class SocketAsyncEventArgs
+    字段 (16):
+      Socket socket
+      SocketOperation operation
+      EndPoint EndPoint
+      Memory<byte> Buffer
+      int Offset
+      int Size
+      SocketFlags SockFlags
+      Socket AcceptSocket
+      IPAddress[] Addresses
+      int Port
+      IList<ArraySegment<byte>> Buffers
+      bool ReuseSocket
+      int CurrentAddress
+      Socket AcceptedSocket
+      int Total
+      int EndCalled
+
+  public  class SocketException
+
+  internal  class SystemNetworkCredential
+
+  internal static class SystemNetworkInterface  [TypeDefIndex: 7954]
+
+  internal static class UnixNetworkInterfaceFactoryPal  [TypeDefIndex: 7965]
+
+  public  class WebSocket
+
+  private  struct WebSocket.<ConnectTask>d__36
+
+  private  struct WebSocket.<ReceiveTask>d__43
+
+  private  struct WebSocket.<SendTask>d__42
+
+  private  class WebSocket.SendBuffer  [TypeDefIndex: 11919]
+    字段 (2):
+      byte[] data
+      WebSocketMessageType type
+
+  private  struct WebSocketHandle.<ConnectAsyncCore>d__26
+    字段 (3):
+      CancellationToken cancellationToken
+      Uri uri
+      ClientWebSocketOptions options
+
+  private  struct WebSocketHandle.<ConnectSocketAsync>d__27
+    字段 (4):
+      string host
+      CancellationToken cancellationToken
+      int port
+      string headerValue
+
+  private  struct WebSocketHandle.<ParseAndValidateConnectResponseAsync>d__30
+    字段 (4):
+      Stream stream
+      CancellationToken cancellationToken
+      string expectedSecWebSocketAccept
+      ClientWebSocketOptions options
+
+  private  struct WebSocketHandle.<ReadResponseHeaderLineAsync>d__32
+    字段 (2):
+      Stream stream
+      CancellationToken cancellationToken
+
+  internal  class WebSocketManager
+
+  public  class WebSocketReceiveResult  [TypeDefIndex: 8060]
+
+  internal static class WebSocketValidate  [TypeDefIndex: 8042]
+
+
+二、eDataType 类型枚举
+------------------------------------------------------------
+  0x00 (  0) = None          无类型
+  0x01 (  1) = Char          有符号字节
+  0x02 (  2) = UChar         无符号字节
+  0x03 (  3) = Short         有符号短整型
+  0x04 (  4) = UShort        无符号短整型
+  0x05 (  5) = Int           有符号整型
+  0x06 (  6) = UInt          无符号整型
+  0x07 (  7) = Int64         有符号长整型
+  0x08 (  8) = UInt64        无符号长整型
+  0x09 (  9) = Float         浮点数
+  0x0a ( 10) = String        字符串(UTF-8)
+  0x0b ( 11) = Struct        内嵌结构体
+  0x0c ( 12) = Array         数组(低字节type=0x12)
+  0xff (255) = EndOfAttr     属性结束标记
+
+
+三、struct_id 范围分析
+------------------------------------------------------------
+
+  RECV 结构体 (struct_id 10000-10999): 916 个
+    说明: 客户端接收(服务端→客户端)的数据结构
+      10001: selectRoleStruct
+      10002: itemStruct
+      10003: itemDataStruct
+      10004: itemDataStructEquip
+      10005: itemDataStructFaBao
+      10006: discipleStruct
+      10007: livingEquipStruct
+      10009: specialitySpritRoot
+      10010: specialityBody
+      10011: specialityTalent
+      10012: specialityStrange
+      10013: commUCharUCharInt
+      10014: commUCharUChar
+      10015: secretSceneGrid
+      10016: secretSceneListItem
+      10017: twoPositionData
+      10018: positionStruct
+      10019: commUCharUInt
+      10020: commUShortUShortUShort
+      10021: commUIntUIntUInt
+      ... 共 916 个
+
+  SEND 结构体 (struct_id 11000-11999): 149 个
+    说明: 客户端发送(客户端→服务端)的数据结构
+      11000: mgzdRank1
+      11001: mgzdRank2
+      11002: mgzdRank3
+      11003: mgzdMassDetail
+      11004: mjzjHurtRank
+      11005: mjzjScoreRank
+      11006: seasonChapterStruct8
+      11007: flEntityPuTongZhenJi
+      11008: flMarchPuTongZhenJi
+      11009: flMarchBenYuanZhenJi
+      11010: flMarchMoJunYaoMo
+      11011: mojiangStruct
+      11012: mojiangActorRank
+      11013: mojiangGuildRank
+      11014: mojiangRecord
+      11015: zzshnewTeamDetail
+      11016: zzshnewGuildInfo
+      11017: yyTuituStruct
+      11018: clientFight57
+      11019: ZLXXQuesListCheck
+      ... 共 149 个
+
+  ATTR 结构体 (struct_id 3000-3999): 0 个
+    说明: 角色属性/变量定义
+
+
+四、RawFileReader 结构体读取方法
+------------------------------------------------------------
+  这些是 C# 端直接读取的自定义数据结构，与协议无关：
+    List<List<strIntData>> List_List_strIntData
+    List<strIntData> List_strIntData
+    strIntData strIntData
+    List<shaderconfig_vectors> List_shaderconfig_vectors
+    shaderconfig_vectors shaderconfig_vectors
+    List<shaderconfig_floats> List_shaderconfig_floats
+    shaderconfig_floats shaderconfig_floats
+    List<shaderconfig_color> List_shaderconfig_color
+    shaderconfig_color shaderconfig_color
+    List<skill_behavior_config_intParam> List_skill_behavior_config_intParam
+    skill_behavior_config_intParam skill_behavior_config_intParam
+    List<skill_behavior_config_floatParam> List_skill_behavior_config_floatParam
+    skill_behavior_config_floatParam skill_behavior_config_floatParam
+
+
+五、关键网络方法（script.json）
+------------------------------------------------------------
+  NetWorkProtocolParser$$CreatePFunction  [未找到]
+  NetWorkProtocolParser$$CreateProtocel  [未找到]
+  NetWorkProtocolParser$$CreateNetWorkProtocolInfo  [未找到]
+  NetWorkUnit.NetWorkProtocolParser$$ParseOnePass
+    Address: 17147836
+    Signature: bool NetWorkUnit_NetWorkProtocolParser__ParseOnePass (NetWorkUnit_NetWorkProtocolParser_o* __this, i
+  NetWorkUnit.NetWorkProtocolParser$$ParseOnePass
+    Address: 17147836
+    Signature: bool NetWorkUnit_NetWorkProtocolParser__ParseOnePass (NetWorkUnit_NetWorkProtocolParser_o* __this, i
+  NetWorkUnit.NetWorkProtocolParser$$RecvOnePass
+    Address: 17149080
+    Signature: bool NetWorkUnit_NetWorkProtocolParser__RecvOnePass (NetWorkUnit_NetWorkProtocolParser_o* __this, in
+  NetWorkUnit.NetWorkProtocolParser$$Init
+    Address: 17154752
+    Signature: void NetWorkUnit_NetWorkProtocolParser__Init (NetWorkUnit_NetWorkProtocolParser_o* __this, const Met
+  NetWorkUnit.NetWorkProtocolParser$$Load
+    Address: 17156016
+    Signature: void NetWorkUnit_NetWorkProtocolParser__Load (NetWorkUnit_NetWorkProtocolParser_o* __this, System_St
+  NetWorkUnit.NetWorkProtocolParser$$.ctor
+    Address: 17147340
+    Signature: void NetWorkUnit_NetWorkProtocolParser___ctor (NetWorkUnit_NetWorkProtocolParser_o* __this, const Me

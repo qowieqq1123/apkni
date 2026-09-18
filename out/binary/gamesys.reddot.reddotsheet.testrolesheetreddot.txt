@@ -1,0 +1,16 @@
+
+
+
+
+
+testRoleSheetReddot=reddotSheetBase.new({classname='testRoleSheetReddot'})
+
+testRoleSheetReddot.reddot_type=REDDIT_TYPE.eRole
+
+testRoleSheetReddot.reddot_config=
+{
+[REDDIT_SUB_TYPE.sPlayerAttr]={
+refTypeList={REDDIT_TYPE.eSkill},
+},
+
+}

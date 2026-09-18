@@ -1,0 +1,14 @@
+﻿ZQZS exists: True
+ZQZS\ZQZS exists: True
+ZQZS\ZQZS\assets exists: True
+--- ZQZS\ZQZS top ---
+assets
+lib
+META-INF
+publicsuffixes.gz已解压
+res
+AndroidManifest.xml
+classes.dex
+classes2.dex
+classes3.dex
+resources.arsc

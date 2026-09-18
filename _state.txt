@@ -1,0 +1,5 @@
+﻿LOG=bb989289 Initial commit: APK reverse-engineering workspace
+BRANCH=main
+STAGED=0
+UNSTAGED=3
+LASTCOMMIT_BYTES=270

@@ -1,0 +1,13 @@
+
+require'lua.gamesys.common.widgetHelper'
+require'lua.gamesys.common.commonTipsHelper'
+require'lua.gamesys.common.cameraMoveController'
+require'lua.gamesys.common.weakGuideController'
+require'lua.gamesys.common.weakGuideThinkingController'
+require'lua.gamesys.common.strengthenController'
+require'lua.gamesys.common.camereScreenEffect'
+require'lua.gamesys.common.sceneLightControler'
+require'lua.gamesys.common.cangkuFullSolutionController'
+require'lua.gamesys.common.resourceUtility'
+require'lua.gamesys.common.quadtree'
+require'lua.gamesys.common.quadtree_node'

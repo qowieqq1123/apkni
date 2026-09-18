@@ -1,0 +1,1 @@
+require('lua.platformSDK.platformSDK_iOS_EFun_Eu_Efun')

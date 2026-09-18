@@ -1,0 +1,15 @@
+
+
+
+
+
+
+
+
+
+eMysteryFightResultType=
+{
+eVictory=1,
+eDefeat=2,
+eDraw=3,
+}

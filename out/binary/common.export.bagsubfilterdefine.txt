@@ -1,0 +1,12 @@
+
+BAG_SUB_FILTER_TYPE=
+{
+eJingjieItem=1,
+eLiantiItem=2,
+eFuluItem=3,
+eZhuanyeItem=4,
+eGongfaItem=5,
+eOtherItem=6,
+eJingcuiMaterials=7,
+eLianzhiMaterials=8,
+}

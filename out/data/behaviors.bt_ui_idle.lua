@@ -1,0 +1,30 @@
+local __bt__={
+[1]="rootNode",
+[4]={
+{
+[1]="sequenceNode",
+[2]="composites",
+[4]={
+{
+[1]="UIRunAnimatorNode",
+[2]="actions.UI",
+[3]={
+widget="@stWidget",
+target="@stIndex",
+animName="stand",
+duration=0
+},
+},
+{
+[1]="waitNode",
+[2]="actions.common",
+[3]={
+minTime=5,
+maxTime=10
+},
+}
+}
+}
+}
+}
+return __bt__

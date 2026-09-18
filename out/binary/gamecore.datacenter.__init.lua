@@ -1,0 +1,1 @@
+require'lua.gamecore/dataCenter/dataControl'

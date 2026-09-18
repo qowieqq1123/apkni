@@ -1,0 +1,14 @@
+SCENE_TYPE=
+{
+world_1=1,
+home=2,
+world_2=3,
+world_3=4,
+world_4=5,
+xianjie=6,
+airScene=7,
+airScene_2=8,
+MiniGame=9,
+}
+
+

@@ -1,0 +1,11 @@
+zongMenGradeEnum=
+{
+eZhiZun=1,
+eDianFeng=2,
+eBaCui=3,
+eZhongJian=4,
+eXiaoYao=5,
+eYunYou=6,
+}
+
+

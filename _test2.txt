@@ -1,0 +1,24 @@
+﻿ADD_ASSETS_OUT=git : warning: in the working copy of 'ZQZS/ZQZS/assets/Android/appver.txt', LF
+ will be replaced by CRLF the next time Git touches it
+所在位置 行:445 字符: 158
++ ... it reset -q 2>$null; $out = (git add -- ZQZS/ZQZS/assets 2>&1 | Out-S ...
++                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of 'ZQZS/ZQZS/assets/Android/assetbundleServerInfo
+.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ZQZS/ZQZS/assets/AppConfig.json', LF will be r
+eplaced by CRLF the next time Git touches it
+warning: in the working copy of 'ZQZS/ZQZS/assets/bin/Data/boot.config', LF wil
+l be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ZQZS/ZQZS/assets/inland_public_key.pem', LF wi
+ll be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ZQZS/ZQZS/assets/prebuilt_version.json', LF wi
+ll be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ZQZS/ZQZS/assets/xingjia_config.json', LF will
+ be replaced by CRLF the next time Git touches it
+
+EXIT=0
+STAGED=769

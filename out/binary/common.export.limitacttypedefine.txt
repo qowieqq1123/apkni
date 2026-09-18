@@ -1,0 +1,16 @@
+
+LIMIT_ACT_TYPE=
+{
+eTianYuanShouChao=1,
+eShiJieShouLing=2,
+eWenDouLeiTai=3,
+eYiYuHuiYou=4,
+eLingZhenPengZhuang=5,
+eShangHang=6,
+eLeiTaiYanWu=7,
+eXianJieFuMo=8,
+eXianJieXingYu=9,
+eMoGongZhengDuo=10,
+eMoJiang=11,
+eMiaoXingShangLv=12,
+}

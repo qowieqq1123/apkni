@@ -1,0 +1,31 @@
+local __bt__={
+[1]="rootNode",
+[4]={
+{
+[1]="sequenceNode",
+[2]="composites",
+[4]={
+{
+[1]="storyMysteryEventNode",
+[2]="actions.Story",
+[3]={
+sysId=0,
+groupId=7300031
+},
+},
+{
+[1]="storyShowStoryTreeNode",
+[2]="actions.Story",
+[3]={
+treeId=160031
+},
+},
+{
+[1]="storyEnding",
+[2]="actions.Story",
+}
+}
+}
+}
+}
+return __bt__

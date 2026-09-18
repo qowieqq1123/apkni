@@ -1,0 +1,15 @@
+﻿type_code,enum_name,description,csharp_type
+0,None,无类型,void
+1,Char,有符号字节,sbyte
+2,UChar,无符号字节,byte
+3,Short,有符号短整型,short
+4,UShort,无符号短整型,ushort
+5,Int,有符号整型,int
+6,UInt,无符号整型,uint
+7,Int64,有符号长整型,long
+8,UInt64,无符号长整型,ulong
+9,Float,浮点数,float
+10,String,字符串(UTF-8),string
+11,Struct,内嵌结构体,struct
+12,Array,数组(低字节type=0x12),array
+255,EndOfAttr,属性结束标记,EndOfAttr

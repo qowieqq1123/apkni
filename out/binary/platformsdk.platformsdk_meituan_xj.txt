@@ -1,0 +1,3 @@
+
+
+platformSDK_MeiTuan_XJ=simple_class(platformSDK_WeiXin_XJ)

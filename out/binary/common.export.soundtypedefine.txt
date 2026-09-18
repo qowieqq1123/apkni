@@ -1,0 +1,14 @@
+
+SOUND_TYPE=
+{
+eBeginLoopWater=1001,
+eBeginClick2=1003,
+eBeginRetRight1=1011,
+eBeginRetRight3=1013,
+eBeginRetLeft2=1015,
+eBeginClick1=1002,
+eBeginClick3=1004,
+eBeginRetRight2=1012,
+eBeginRetLeft1=1014,
+eBeginRetLeft3=1016,
+}

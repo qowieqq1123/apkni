@@ -1,0 +1,8 @@
+TagNumberHandleType={
+eBatchTask=1,
+}
+
+TagNumberCatchType={
+eBatchTaskAccept=1,
+eBatchTaskFinish=2,
+}

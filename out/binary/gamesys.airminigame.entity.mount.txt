@@ -1,0 +1,1 @@
+mount=simple_class(baseEntity)

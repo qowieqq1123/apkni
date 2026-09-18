@@ -1,0 +1,3 @@
+require'lua.gamesys/buildTiaoZhanSystem/buildTiaoZhanConfig'
+require'lua.gamesys/buildTiaoZhanSystem/buildTiaoZhanModel'
+require'lua.gamesys/buildTiaoZhanSystem/buildTiaoZhanControl'

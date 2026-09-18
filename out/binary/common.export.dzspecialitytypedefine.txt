@@ -1,0 +1,12 @@
+
+DISCIPLE_SPECIALITY_TYPE=
+{
+eSpiritRoot=1,
+eBody=2,
+eTalent=3,
+eStrange=4,
+eChuangShang=5,
+eXX=6,
+eDaoLv=7,
+eSpiritClient=0,
+}

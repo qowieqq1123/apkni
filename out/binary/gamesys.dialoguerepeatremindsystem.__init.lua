@@ -1,0 +1,2 @@
+require'lua.gamesys.dialogueRepeatRemindSystem.dialogueRepeatRemindModel'
+require'lua.gamesys.dialogueRepeatRemindSystem.dialogueRepeatRemindControl'

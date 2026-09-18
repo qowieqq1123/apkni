@@ -1,0 +1,9 @@
+eWuJiBeiConditionType=
+{
+eJingJie=1,
+eLianTi=2,
+eGuBao=3,
+eShiLianTa=4,
+}
+
+

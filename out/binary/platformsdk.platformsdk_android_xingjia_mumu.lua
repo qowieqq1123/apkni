@@ -1,0 +1,4 @@
+
+require('lua.platformSDK.platformSDK_Android_XingJia')
+platformSDK_Android_XingJia_mumu=simple_class(platformSDK_Android_XingJia)
+

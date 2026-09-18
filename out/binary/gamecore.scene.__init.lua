@@ -1,0 +1,1 @@
+require'lua.gamecore.scene.luaBuildLightMap'

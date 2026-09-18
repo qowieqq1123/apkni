@@ -1,0 +1,13 @@
+hudSortType=
+{
+plan_start=1,
+plan_complete=2,
+lianqi_start=3,
+lianqi_complete=4,
+zhifu_start=5,
+zhifu_complete=6,
+diaoke_reward=7,
+diaokeing=8,
+}
+
+

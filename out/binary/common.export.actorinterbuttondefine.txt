@@ -1,0 +1,17 @@
+actorInterButtonType=
+{
+eChat=1,
+eQieCuo=2,
+eFriend=3,
+eRemoveFriend=4,
+eBlack=5,
+eRemoveBlack=6,
+eVisit=7,
+eInviteXM=8,
+eXMKickout=9,
+eXMTransferLeader=10,
+eXMUpPost=11,
+eXMDowmPost=12,
+}
+
+

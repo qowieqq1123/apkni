@@ -1,0 +1,4 @@
+
+NEWBIE_ACTION_FUNC_STR=
+{
+}

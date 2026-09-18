@@ -1,0 +1,1606 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local _MODULENAME="taskController"
+gameState.addListener(def_table(_MODULENAME))
+taskController.name=_MODULENAME
+
+local isInit=false
+local acceptFisrt=nil
+local autoGetRewardMark=nil
+
+local newTaskIndex=0
+local getNewTaskIndex=function()
+newTaskIndex=newTaskIndex+1
+return newTaskIndex
+end
+
+function taskController:onAppStart()
+socketManager:register_receiver(7,21,taskController.do_protocol_7_21)
+socketManager:register_receiver(7,22,taskController.do_protocol_7_22)
+socketManager:register_receiver(7,23,taskController.do_protocol_7_23)
+socketManager:register_receiver(7,25,taskController.do_protocol_7_25)
+socketManager:register_receiver(7,26,taskController.do_protocol_7_26)
+socketManager:register_receiver(7,27,taskController.do_protocol_7_27)
+
+socketManager:register_receiver(7,1,taskController.do_protocol_7_1)
+socketManager:register_receiver(7,2,taskController.do_protocol_7_2)
+socketManager:register_receiver(7,3,taskController.do_protocol_7_3)
+socketManager:register_receiver(7,4,taskController.do_protocol_7_4)
+end
+
+function taskController:onEnterState()
+taskModel:initTaskStateChangeFlag()
+
+notifySystem:listenNotify(notifyConfig.onServerPlatformInited,self.onServerPlatformInited)
+
+notifySystem:listenNotify(notifyConfig.onDiscipleCreate,self.onDiscipleCreate)
+notifySystem:listenNotify(notifyConfig.onDiscipleNewID,self.onDiscipleNewID)
+notifySystem:listenNotify(notifyConfig.onDiscipleRemove,self.onDiscipleRemove)
+notifySystem:listenNotify(notifyConfig.onDiscipleJJChange,self.onDiscipleJJChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleLTChange,self.onDiscipleLTChange)
+notifySystem:listenNotify(notifyConfig.building_event,self.onBuildEvent)
+notifySystem:listenNotify(notifyConfig.onEquipChange,self.onEquipChange)
+notifySystem:listenNotify(notifyConfig.on_money_changed,self.onMoneyChange)
+notifySystem:listenNotify(notifyConfig.recvPro,self.recvPro)
+notifySystem:listenNotify(notifyConfig.onWorldBlockDataChanged,self.onWorldBlockDataChanged)
+notifySystem:listenNotify(notifyConfig.onZongMenAreaUnLock,self.onZongMenAreaUnLock)
+notifySystem:listenNotify(notifyConfig.onGuBaoActive,self.onGuBaoActive)
+notifySystem:listenNotify(notifyConfig.on_item_list_changed,self.on_item_list_changed)
+notifySystem:listenNotify(notifyConfig.shilianta_init,self.shilianta_init)
+notifySystem:listenNotify(notifyConfig.shilianta_change,self.shilianta_change)
+notifySystem:listenNotify(notifyConfig.onXianZhanRoomChange,self.onXianZhanRoomChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleGongFaChange,self.onDiscipleGongFaChange)
+notifySystem:listenNotify(notifyConfig.onQianJiGeUnlockSkill,self.onQianJiGeUnlockSkill)
+notifySystem:listenNotify(notifyConfig.onZongMenFightChange,self.onZongMenFightChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleGongFaLevelUp,self.onDiscipleGongFaLevelUp)
+notifySystem:listenNotify(notifyConfig.onZheXianLingProgressChange,self.onZheXianLingProgressChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleFaBaoChange,self.onDiscipleFaBaoChange)
+notifySystem:listenNotify(notifyConfig.onHouShanShiLianLVChange,self.onHouShanShiLianLVChange)
+notifySystem:listenNotify(notifyConfig.onGuildOrderChange,self.onGuildOrderChange)
+notifySystem:listenNotify(notifyConfig.onXianMengInit,self.onXianMengInit)
+notifySystem:listenNotify(notifyConfig.onXianMengChange,self.onXianMengChange)
+notifySystem:listenNotify(notifyConfig.on_system_open,self.on_system_open)
+
+notifySystem:listenNotify(notifyConfig.onTaskInit,self.onTaskInit)
+notifySystem:listenNotify(notifyConfig.onTaskChange,self.onTaskChange)
+notifySystem:listenNotify(notifyConfig.create_sundrise,self.create_sundrise)
+notifySystem:listenNotify(notifyConfig.remove_sundrise,self.remove_sundrise)
+notifySystem:listenNotify(notifyConfig.onSundriseAIRecord,self.onSundriseAIRecord)
+notifySystem:listenNotify(notifyConfig.on_family_init,self.on_family_init)
+notifySystem:listenNotify(notifyConfig.on_family_state_change,self.on_family_state_change)
+notifySystem:listenNotify(notifyConfig.onZheXianLingChange,self.onZheXianLingChange)
+notifySystem:listenNotify(notifyConfig.onYueLongChiLingYunChange,self.onYueLongChiLingYunChange)
+
+notifySystem:listenNotify(notifyConfig.onDouFaTaiDataInit,self.onDouFaTaiDataInit)
+notifySystem:listenNotify(notifyConfig.onDouFaTaiWenDaoChange,self.onDouFaTaiWenDaoChange)
+notifySystem:listenNotify(notifyConfig.onNPCIntimacyChange,self.onNPCIntimacyChange)
+notifySystem:listenNotify(notifyConfig.onDaoBingStarChange,self.onDaoBingStarChange)
+notifySystem:listenNotify(notifyConfig.onDaoBingJingLianChange,self.onDaoBingJingLianChange)
+notifySystem:listenNotify(notifyConfig.onZongMenXianTuReward,self.onZongMenXianTuReward)
+notifySystem:listenNotify(notifyConfig.onGongFaActive,self.onGongFaActive)
+notifySystem:listenNotify(notifyConfig.onDiscipleTianMingLvChange,self.onDiscipleTianMingLvChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleSixAttrChange,self.onDiscipleSixAttrChange)
+notifySystem:listenNotify(notifyConfig.onGongFaStudyLevelChange,self.onGongFaStudyLevelChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleJobChange,self.onDiscipleJobChange)
+notifySystem:listenNotify(notifyConfig.onEquipJingLianLevelChange,self.onEquipJingLianLevelChange)
+notifySystem:listenNotify(notifyConfig.onFabaoJilianLevelChange,self.onFabaoJilianLevelChange)
+notifySystem:listenNotify(notifyConfig.onFabaoTuPo,self.onFabaoTuPo)
+notifySystem:listenNotify(notifyConfig.onFabaoLingXingLevelChange,self.onFabaoLingXingLevelChange)
+notifySystem:listenNotify(notifyConfig.onXianTuChengJiuSystemInit,self.onXianTuChengJiuSystemInit)
+notifySystem:listenNotify(notifyConfig.onWorldLeadLastHurtChange,self.onWorldLeadLastHurtChange)
+notifySystem:listenNotify(notifyConfig.onHuntMonsterTeamStartTeam,self.onHuntMonsterTeamStartTeam)
+notifySystem:listenNotify(notifyConfig.onHuntMonsterTeamStartTeamClear,self.onHuntMonsterTeamStartTeamClear)
+notifySystem:listenNotify(notifyConfig.wuxingta_init,self.wuxingta_init)
+notifySystem:listenNotify(notifyConfig.wuxingta_change,self.wuxingta_change)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingGenUpLevel,self.onDiscipleLingGenUpLevel)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingGenResetLevel,self.onDiscipleLingGenResetLevel)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingGenChangeVary,self.onDiscipleLingGenChangeVary)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingGenVary,self.onDiscipleLingGenVary)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingGenEquipBoard,self.onDiscipleLingGenEquipBoard)
+notifySystem:listenNotify(notifyConfig.onEquipChongZhu,self.onEquipChongZhu)
+notifySystem:listenNotify(notifyConfig.onFabaoLianHuaChange,self.onFabaoLianHuaChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleDaoYanLvChange,self.onDiscipleDaoYanLvChange)
+notifySystem:listenNotify(notifyConfig.onDiscipleCuiTiChange,self.onDiscipleCuiTiChange)
+
+notifySystem:listenNotify(notifyConfig.onBattleResultComplete,self.onBattleResultComplete)
+notifySystem:listenNotify(notifyConfig.onNewDay5am,self.onNewDay5am)
+notifySystem:listenNotify(notifyConfig.onNewDay,self.onNewDay)
+
+
+notifySystem:listenNotify(notifyConfig.onWanBaoXunBaoDuiCatInit,self.onWanBaoXunBaoDuiCatInit)
+notifySystem:listenNotify(notifyConfig.onWanBaoXunBaoDuiCatLevelChange,self.onWanBaoXunBaoDuiCatLevelChange)
+notifySystem:listenNotify(notifyConfig.onWanBaoXunBaoDuiCatEquipLevelChange,self.onWanBaoXunBaoDuiCatEquipLevelChange)
+
+notifySystem:listenNotify(notifyConfig.onLingZhenEquip,self.YFLZValueChange)
+notifySystem:listenNotify(notifyConfig.onZhenTuYanJiu,self.ZhenTuStudyChange)
+notifySystem:listenNotify(notifyConfig.onShanMenDaZhenTeamChange,self.onShanMenDaZhenTeamChange)
+notifySystem:listenNotify(notifyConfig.onShanMenDaZhenInitData,self.onShanMenDaZhenInitData)
+notifySystem:listenNotify(notifyConfig.onZMDaoShiChange,self.onZMDaoShiChange)
+
+notifySystem:listenNotify(notifyConfig.onTianMoJieInit,self.onTianMoJieInit)
+notifySystem:listenNotify(notifyConfig.onTianMoJieScoreChange,self.onTianMoJiejifenChange)
+notifySystem:listenNotify(notifyConfig.onTianMoJieStageChange,self.onTianMoJieStageChange)
+notifySystem:listenNotify(notifyConfig.oneXunBaoShiLianLVChange,self.oneXunBaoShiLianLVChange)
+notifySystem:listenNotify(notifyConfig.onWenXinGuanNumChange,self.onWenXinGuanNumChange)
+notifySystem:listenNotify(notifyConfig.onHouShanZhenLingLVChange,self.onHouShanZhenLingLVChange)
+
+notifySystem:listenNotify(notifyConfig.onChangeTaskNpcTalk,self.onTaskNpcTalkChange)
+notifySystem:listenNotify(notifyConfig.technologyUpLevelFinish,self.onXJBLTechnologyLvUpFinish)
+
+notifySystem:listenNotify(notifyConfig.onXianJieCloudUnlock,self.onXianJieCloudChange)
+notifySystem:listenNotify(notifyConfig.onJyCountChange,self.onJyCountChange)
+
+notifySystem:listenNotify(notifyConfig.onSeasonChange,self.onSeasonChange)
+notifySystem:listenNotify(notifyConfig.onSeasonStageChange,self.onSeasonStageChange)
+notifySystem:listenNotify(notifyConfig.onSeasonStageDataChange,self.onSeasonStageDataChange)
+
+notifySystem:listenNotify(notifyConfig.onDanFangUnlock,self.onDanFangUnlockChange)
+
+notifySystem:listenNotify(notifyConfig.shoumolistNumChange,self.onshoumolistNumChange)
+
+notifySystem:listenNotify(notifyConfig.onJoinXianYuFlagChange,self.onJoinXianYuFlagChange)
+notifySystem:listenNotify(notifyConfig.onSeasonEnterConditionChange,self.onSeasonEnterConditionChange)
+notifySystem:listenNotify(notifyConfig.onSeasonOpenAnimationChange,self.onSeasonOpenAnimationChange)
+notifySystem:listenNotify(notifyConfig.onYunZhouZhenQiPosChange,self.onYunZhouZhenQiPosChange)
+
+notifySystem:listenNotify(notifyConfig.onZWEquipChange,self.onZWEquipChange)
+notifySystem:listenNotify(notifyConfig.onXCEquipChange,self.onXCEquipChange)
+notifySystem:listenNotify(notifyConfig.onXCEquipChangebyMix,self.onXCEquipChangebyMix)
+notifySystem:listenNotify(notifyConfig.onXingGuiLvChange,self.onXingGuiLvChange)
+
+notifySystem:listenNotify(notifyConfig.onBagEquipFilter,self.onBagEquipFilter)
+
+notifySystem:listenNotify(notifyConfig.onLingShouGetOrUpdate,self.onLingShouGetOrUpdate)
+notifySystem:listenNotify(notifyConfig.onLingShouRemove,self.onLingShouRemove)
+notifySystem:listenNotify(notifyConfig.onDiscipleLingShouChange,self.onDiscipleLingShouChange)
+notifySystem:listenNotify(notifyConfig.onLingShouJJChange,self.onLingShouJJChange)
+notifySystem:listenNotify(notifyConfig.onShouLanLingShouChange,self.onShouLanLingShouChange)
+notifySystem:listenNotify(notifyConfig.onLingShouXMChange,self.onLingShouXMChange)
+
+timeEventController.addNormalTimerHandler(3,self.name,self)
+
+taskController:onEnterState_TQ()
+taskModel:onEnterState_NPC()
+end
+
+function taskController:onProtocolReq()
+
+
+if acceptFisrt then
+acceptFisrt=nil
+taskModel:refreshNewLineTask(true)
+
+
+
+
+
+else
+
+taskModel:disposeAllClientCheckTaskTypeEvent()
+
+taskModel:disposeConditionsEventInit()
+
+taskModel:refreshNewLineTask(true)
+taskModel:refreshNewNextTask(true)
+end
+taskModel:onProtocolReq_NPC()
+end
+
+function taskController:onLeaveState(isReconnet)
+taskModel:clearData()
+taskModel:clearTaskEntitysData(isReconnet)
+isInit=false
+autoGetRewardMark=nil
+
+notifySystem:removelistener(notifyConfig.onDiscipleCreate,self.onDiscipleCreate)
+notifySystem:removelistener(notifyConfig.onDiscipleNewID,self.onDiscipleNewID)
+notifySystem:removelistener(notifyConfig.onDiscipleRemove,self.onDiscipleRemove)
+notifySystem:removelistener(notifyConfig.onDiscipleJJChange,self.onDiscipleJJChange)
+notifySystem:removelistener(notifyConfig.onDiscipleLTChange,self.onDiscipleLTChange)
+notifySystem:removelistener(notifyConfig.building_event,self.onBuildEvent)
+notifySystem:removelistener(notifyConfig.onEquipChange,self.onEquipChange)
+notifySystem:removelistener(notifyConfig.on_money_changed,self.onMoneyChange)
+notifySystem:removelistener(notifyConfig.recvPro,self.recvPro)
+notifySystem:removelistener(notifyConfig.onWorldBlockDataChanged,self.onWorldBlockDataChanged)
+notifySystem:removelistener(notifyConfig.onZongMenAreaUnLock,self.onZongMenAreaUnLock)
+notifySystem:removelistener(notifyConfig.onGuBaoActive,self.onGuBaoActive)
+notifySystem:removelistener(notifyConfig.on_item_list_changed,self.on_item_list_changed)
+notifySystem:removelistener(notifyConfig.shilianta_init,self.shilianta_init)
+notifySystem:removelistener(notifyConfig.shilianta_change,self.shilianta_change)
+notifySystem:removelistener(notifyConfig.onXianZhanRoomChange,self.onXianZhanRoomChange)
+notifySystem:removelistener(notifyConfig.onDiscipleGongFaChange,self.onDiscipleGongFaChange)
+notifySystem:removelistener(notifyConfig.onQianJiGeUnlockSkill,self.onQianJiGeUnlockSkill)
+notifySystem:removelistener(notifyConfig.onZongMenFightChange,self.onZongMenFightChanEuge)
+notifySystem:removelistener(notifyConfig.onDiscipleGongFaLevelUp,self.onDiscipleGongFaLevelUp)
+notifySystem:removelistener(notifyConfig.onZheXianLingProgressChange,self.onZheXianLingProgressChange)
+notifySystem:removelistener(notifyConfig.onDiscipleFaBaoChange,self.onDiscipleFaBaoChange)
+notifySystem:removelistener(notifyConfig.onHouShanShiLianLVChange,self.onHouShanShiLianLVChange)
+notifySystem:removelistener(notifyConfig.onGuildOrderChange,self.onGuildOrderChange)
+notifySystem:removelistener(notifyConfig.onXianMengChange,self.onXianMengChange)
+notifySystem:removelistener(notifyConfig.onXianMengInit,self.onXianMengInit)
+notifySystem:removelistener(notifyConfig.on_system_open,self.on_system_open)
+
+notifySystem:removelistener(notifyConfig.onTaskInit,self.onTaskInit)
+notifySystem:removelistener(notifyConfig.onTaskChange,self.onTaskChange)
+notifySystem:removelistener(notifyConfig.create_sundrise,self.create_sundrise)
+notifySystem:removelistener(notifyConfig.remove_sundrise,self.remove_sundrise)
+notifySystem:removelistener(notifyConfig.onSundriseAIRecord,self.onSundriseAIRecord)
+notifySystem:removelistener(notifyConfig.on_family_init,self.on_family_init)
+notifySystem:removelistener(notifyConfig.on_family_state_change,self.on_family_state_change)
+notifySystem:removelistener(notifyConfig.onZheXianLingChange,self.onZheXianLingChange)
+notifySystem:removelistener(notifyConfig.onYueLongChiLingYunChange,self.onYueLongChiLingYunChange)
+
+notifySystem:removelistener(notifyConfig.onDouFaTaiDataInit,self.onDouFaTaiDataInit)
+notifySystem:removelistener(notifyConfig.onDouFaTaiWenDaoChange,self.onDouFaTaiWenDaoChange)
+notifySystem:removelistener(notifyConfig.onNPCIntimacyChange,self.onNPCIntimacyChange)
+notifySystem:removelistener(notifyConfig.onDaoBingStarChange,self.onDaoBingStarChange)
+notifySystem:removelistener(notifyConfig.onDaoBingJingLianChange,self.onDaoBingJingLianChange)
+notifySystem:removelistener(notifyConfig.onZongMenXianTuReward,self.onZongMenXianTuReward)
+notifySystem:removelistener(notifyConfig.onGongFaActive,self.onGongFaActive)
+notifySystem:removelistener(notifyConfig.onDiscipleTianMingLvChange,self.onDiscipleTianMingLvChange)
+notifySystem:removelistener(notifyConfig.onDiscipleSixAttrChange,self.onDiscipleSixAttrChange)
+notifySystem:removelistener(notifyConfig.onGongFaStudyLevelChange,self.onGongFaStudyLevelChange)
+notifySystem:removelistener(notifyConfig.onDiscipleJobChange,self.onDiscipleJobChange)
+notifySystem:removelistener(notifyConfig.onEquipJingLianLevelChange,self.onEquipJingLianLevelChange)
+notifySystem:removelistener(notifyConfig.onFabaoJilianLevelChange,self.onFabaoJilianLevelChange)
+notifySystem:removelistener(notifyConfig.onFabaoTuPo,self.onFabaoTuPo)
+notifySystem:removelistener(notifyConfig.onFabaoLingXingLevelChange,self.onFabaoLingXingLevelChange)
+notifySystem:removelistener(notifyConfig.onXianTuChengJiuSystemInit,self.onXianTuChengJiuSystemInit)
+notifySystem:removelistener(notifyConfig.onWorldLeadLastHurtChange,self.onWorldLeadLastHurtChange)
+notifySystem:removelistener(notifyConfig.wuxingta_init,self.wuxingta_init)
+notifySystem:removelistener(notifyConfig.wuxingta_change,self.wuxingta_change)
+notifySystem:removelistener(notifyConfig.onDiscipleLingGenUpLevel,self.onDiscipleLingGenUpLevel)
+notifySystem:removelistener(notifyConfig.onDiscipleLingGenResetLevel,self.onDiscipleLingGenResetLevel)
+notifySystem:removelistener(notifyConfig.onDiscipleLingGenChangeVary,self.onDiscipleLingGenChangeVary)
+notifySystem:removelistener(notifyConfig.onDiscipleLingGenVary,self.onDiscipleLingGenVary)
+notifySystem:removelistener(notifyConfig.onDiscipleLingGenEquipBoard,self.onDiscipleLingGenEquipBoard)
+notifySystem:removelistener(notifyConfig.onEquipChongZhu,self.onEquipChongZhu)
+notifySystem:removelistener(notifyConfig.onFabaoLianHuaChange,self.onFabaoLianHuaChange)
+notifySystem:removelistener(notifyConfig.onDiscipleDaoYanLvChange,self.onDiscipleDaoYanLvChange)
+notifySystem:removelistener(notifyConfig.onDiscipleCuiTiChange,self.onDiscipleCuiTiChange)
+
+notifySystem:removelistener(notifyConfig.onBattleResultComplete,self.onBattleResultComplete)
+notifySystem:removelistener(notifyConfig.onNewDay5am,self.onNewDay5am)
+notifySystem:removelistener(notifyConfig.onNewDay,self.onNewDay)
+
+
+notifySystem:removelistener(notifyConfig.onWanBaoXunBaoDuiCatInit,self.onWanBaoXunBaoDuiCatInit)
+notifySystem:removelistener(notifyConfig.onWanBaoXunBaoDuiCatLevelChange,self.onWanBaoXunBaoDuiCatLevelChange)
+notifySystem:removelistener(notifyConfig.onWanBaoXunBaoDuiCatEquipLevelChange,self.onWanBaoXunBaoDuiCatEquipLevelChange)
+
+notifySystem:removelistener(notifyConfig.onLingZhenEquip,self.YFLZValueChange)
+notifySystem:removelistener(notifyConfig.onZhenTuYanJiu,self.ZhenTuStudyChange)
+notifySystem:removelistener(notifyConfig.onShanMenDaZhenTeamChange,self.onShanMenDaZhenTeamChange)
+notifySystem:removelistener(notifyConfig.onShanMenDaZhenInitData,self.onShanMenDaZhenInitData)
+notifySystem:removelistener(notifyConfig.onZMDaoShiChange,self.onZMDaoShiChange)
+notifySystem:removelistener(notifyConfig.onTianMoJieInit,self.onTianMoJieInit)
+notifySystem:removelistener(notifyConfig.onTianMoJieScoreChange,self.onTianMoJiejifenChange)
+notifySystem:removelistener(notifyConfig.onTianMoJieStageChange,self.onTianMoJieStageChange)
+
+notifySystem:removelistener(notifyConfig.onChangeTaskNpcTalk,self.onTaskNpcTalkChange)
+notifySystem:removelistener(notifyConfig.onJoinXianYuFlagChange,self.onJoinXianYuFlagChange)
+notifySystem:removelistener(notifyConfig.onXianJieCloudUnlock,self.onXianJieCloudChange)
+notifySystem:removelistener(notifyConfig.onSeasonEnterConditionChange,self.onSeasonEnterConditionChange)
+notifySystem:removelistener(notifyConfig.onSeasonChange,self.onSeasonChange)
+notifySystem:removelistener(notifyConfig.onSeasonStageChange,self.onSeasonStageChange)
+notifySystem:removelistener(notifyConfig.onSeasonStageDataChange,self.onSeasonStageDataChange)
+notifySystem:removelistener(notifyConfig.onSeasonOpenAnimationChange,self.onSeasonOpenAnimationChange)
+notifySystem:removelistener(notifyConfig.onYunZhouZhenQiPosChange,self.onYunZhouZhenQiPosChange)
+
+notifySystem:removelistener(notifyConfig.onZWEquipChange,self.onZWEquipChange)
+notifySystem:removelistener(notifyConfig.onXCEquipChange,self.onXCEquipChange)
+notifySystem:removelistener(notifyConfig.onXCEquipChangebyMix,self.onXCEquipChangebyMix)
+notifySystem:removelistener(notifyConfig.onXingGuiLvChange,self.onXingGuiLvChange)
+
+timeEventController.removeNormalTimerHandler(3,self.name)
+self:clearCountCache()
+taskController:onLeaveState_TQ()
+taskModel:clearData_NPC()
+end
+
+function taskController:onPlayerCreate(...)
+
+end
+
+function taskController:onLostConnection()
+
+end
+
+function taskController:checkInit()
+return isInit==true
+end
+
+function taskController.onServerPlatformInited()
+taskModel:initLookup()
+end
+
+
+function taskController:onNormalUpdate(delay)
+if not taskController:checkInit()then return end
+
+taskModel:checkAllTaskTime()
+
+
+if self:haveTempStorage()then
+self:triggerTempStorage()
+end
+end
+
+
+
+
+
+
+function taskController.onDiscipleCreate(dis_guid)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleAdd)
+taskModel:disposeConditionsEvent(taskConditionEventType.eDiZiAdd)
+end
+
+function taskController.onDiscipleNewID(dis_guid,dzid)
+taskModel:disposeConditionsEvent(taskConditionEventType.eGetDiZiID)
+end
+
+
+function taskController.onDiscipleRemove(kickoutType,dis_guid)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleRemove)
+taskModel:disposeConditionsEvent(taskConditionEventType.eGetDiZiID)
+taskModel:disposeConditionsEvent(taskConditionEventType.eDiZiRemove)
+end
+
+
+function taskController.onDiscipleJJChange(dis_guid,oldlv,lv,oldexp,exp)
+if oldlv~=lv then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleJJLevelChange)
+taskModel:disposeConditionsEvent(taskConditionEventType.eDiZiJJLevelChange)
+end
+end
+
+
+function taskController.onDiscipleLTChange(dis_guid,oldlv,lv,oldexp,exp)
+if oldlv~=lv then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleLTLevelChange)
+end
+end
+
+
+function taskController.onBuildEvent(eventType,param1,param2,param3)
+if eventType==buildingEvent.zongmenLevelUp and param3~=param1 then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZongMenLevelChange)
+taskModel:disposeConditionsEvent(taskConditionEventType.eZongMenLevelChange)
+elseif eventType==buildingEvent.levelUpComplete then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eBuildLevelChange)
+taskModel:disposeConditionsEvent(taskConditionEventType.eBuildLevelChange)
+elseif eventType==buildingEvent.buildStart then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eBuildStart)
+elseif eventType==buildingEvent.buildComplete then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eBuildComplete)
+taskModel:disposeConditionsEvent(taskConditionEventType.eBuildingDone)
+local bdData=zongmenModel:getBuildingData(param2)
+if bdData.build_id==SLG_SYSTEM_TYPE.eCangJingGe then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCangJingGeBuildComplete)
+end
+elseif eventType==buildingEvent.removeBuilding then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eBuildRemove)
+elseif eventType==buildingEvent.replaceDisciple then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleManagerChange)
+end
+end
+
+
+function taskController.onEquipChange(changeType,dis_guid,equipType)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleEquipChange)
+end
+
+
+function taskController.onDiscipleFaBaoChange(dis_guid,changeType)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleFaBaoChange)
+end
+
+
+function taskController.onHouShanShiLianLVChange(lv)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eHouShanShiLianChange)
+end
+
+
+function taskController.onGuildOrderChange(orderID)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eGuildOrderChange)
+end
+
+function taskController.onXianMengInit()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianMengChange)
+end
+
+
+function taskController.onXianMengChange(flag)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianMengChange)
+end
+
+function taskController.on_system_open(sysid,flag)
+if flag then
+taskModel:disposeConditionsEvent(taskConditionEventType.eSystemOpen)
+end
+end
+
+
+function taskController.onMoneyChange(moneyType,lastVal,val)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eMoneyChange)
+end
+
+
+function taskController.on_item_list_changed(args,lookup_guidStr,lookup_itemid,lookup_bag,lookup_change)
+local dbChange=lookup_bag[BAG_TYPE.eDaoBingBag]==true
+local eqChange=lookup_bag[BAG_TYPE.eEquipBag]==true
+local fbChange=lookup_bag[BAG_TYPE.eFabaoBag]==true
+local mmChange=lookup_bag[BAG_TYPE.eMaoMaoBag]==true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eItemChange)
+
+if dbChange then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDaoBingNumChange)
+end
+if eqChange then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eEquipNumChange)
+end
+if fbChange then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFaBaoNumChange)
+end
+if mmChange then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eExpeditionEquipNumChange)
+end
+end
+
+
+function taskController.recvPro(sysid,pid)
+if sysid==3 and pid==18 then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eMountain)
+end
+end
+
+
+function taskController.onWorldBlockDataChanged(world,block,state)
+if state==eWorldBlockState.OPEN then
+
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWorldBlockStateChange)
+taskModel:disposeConditionsEvent(taskConditionEventType.eWorldBlockUnlockChange)
+end
+end
+
+
+function taskController.onZongMenAreaUnLock(sfID,areaID)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZongMenAreaStateChange)
+end
+
+
+function taskController.onGuBaoActive(gbid)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eGuBaoNumChange)
+end
+
+
+function taskController.shilianta_init(curLayer,isChallengeAll)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eShiLianTaInit)
+end
+
+
+function taskController.shilianta_change(oldLayer,curLayer,isChallengeAll)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eShiLianTaLayerChange)
+end
+
+
+function taskController.onXianZhanRoomChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianZhanRoomChange)
+end
+
+
+function taskController.onDiscipleGongFaChange(dis_guid,pos,gfID)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleGongFaChange)
+end
+
+
+function taskController.onQianJiGeUnlockSkill()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eQianJiGeUnlockSkill)
+end
+
+
+function taskController.onZongMenFightChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZongMenFightChange)
+end
+
+
+function taskController.onDiscipleGongFaLevelUp()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleGongFaLevelChange)
+end
+
+
+function taskController.onZheXianLingProgressChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZheXianLingProgressChange)
+end
+
+function taskController.onTaskInit()
+taskModel:initEntityTasks()
+end
+
+function taskController.onTaskChange(taskid,taskstate)
+local taskdata=taskModel:getTask(taskid)
+if taskdata~=nil then
+taskdata.newTaskIndex=getNewTaskIndex()
+end
+
+taskModel:checkEntityTaskChange(taskid,taskstate)
+
+local hasPlot=taskModel:checkActivePlot(taskid,taskstate)
+if not hasPlot then
+if taskstate==taskModel.taskRewardState then
+taskModel:autoGetReward(taskid)
+end
+end
+
+if taskstate==taskModel.taskFinishState then
+
+local func=function()
+taskModel:disposeConditionsEvent(taskConditionEventType.eTaskChange)
+end
+timeEventController.delayDo(0.2,func)
+end
+
+
+end
+
+function taskController.create_sundrise(id,guid,stype)
+taskModel:onEntityCreate(id,guid,stype)
+end
+
+function taskController.remove_sundrise(guid)
+taskModel:onEntityRemove(guid)
+end
+
+function taskController.onSundriseAIRecord(guid,flag)
+taskModel:onSundriseAIRecord(guid,flag)
+end
+
+function taskController.on_family_init()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFamilyInit)
+end
+
+function taskController.on_family_state_change(world,unFamilyId,oldState,state)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFamilyStateChange)
+end
+
+function taskController.onZheXianLingChange(book_id,index)
+taskModel:disposeConditionsEvent(taskConditionEventType.eZheXianLingChange)
+end
+
+function taskController.onYueLongChiLingYunChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eYueLongChiLingYunChange)
+end
+
+function taskController.onDouFaTaiWenDaoChange(wendao)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWenDaoChange)
+end
+
+function taskController.onDouFaTaiDataInit()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWenDaoChange)
+end
+
+function taskController.onNPCIntimacyChange(npcid)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eNPCIntimacyChange)
+end
+
+function taskController.onDaoBingStarChange(guid,pos,star)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDaoBingStarChange)
+end
+
+function taskController.onDaoBingJingLianChange(guid,pos,level)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDaoBingJingLianChange)
+end
+
+function taskController.onZongMenXianTuReward(id)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZongMenXianTuReward)
+end
+
+function taskController.onGongFaActive(gfID)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eGongFaActive)
+end
+
+function taskController.onDiscipleTianMingLvChange(discipleguid,oldtmlv,tmlv)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleTianMingChange)
+end
+
+function taskController.onDiscipleSixAttrChange(discipleguid,attrid,old,cur)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleSixAttrChange)
+end
+
+function taskController.onGongFaStudyLevelChange(gfID)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eGongFaStudyLevelChange)
+end
+
+function taskController.onDiscipleJobChange(discipleguid,proSkillId,oldlv,level,oldexp,exp)
+if oldlv~=level then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleProSkillLevelChange)
+end
+end
+
+function taskController.onEquipJingLianLevelChange(guid,pos,level)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eEquipJingLianLevelChange)
+end
+
+function taskController.onFabaoJilianLevelChange(guid,pos,level)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFabaoJilianLevelChange)
+end
+
+function taskController.onFabaoTuPo(guid,pos,level)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFaBaoTuPo)
+end
+
+function taskController.onFabaoLingXingLevelChange(guid,pos,level)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFabaoLingXingLevelChange)
+end
+
+function taskController.onXianTuChengJiuSystemInit()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianTuChengJiuSystemInit)
+end
+
+function taskController.onWorldLeadLastHurtChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWorldLeaderMaxHurtChange)
+end
+
+function taskController.wuxingta_init()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWuXingTaInit)
+end
+
+function taskController.wuxingta_change()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWuXingTaLayerChange)
+end
+
+function taskController.onDiscipleLingGenUpLevel()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiZiLingGenLevelChange)
+end
+
+function taskController.onDiscipleLingGenVary()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleLingGenVary)
+end
+function taskController.onDiscipleLingGenChangeVary()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleLingGenChangeVary)
+end
+function taskController.onDiscipleLingGenEquipBoard()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleLingGenEquipBoard)
+end
+function taskController.onEquipChongZhu()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eEquipChongZhu)
+end
+function taskController.onFabaoLianHuaChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFabaoLianHuaChange)
+end
+function taskController.onDiscipleDaoYanLvChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleDaoYanLvChange)
+end
+function taskController.onDiscipleCuiTiChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleCuiTiChange)
+end
+
+function taskController.onDiscipleLingGenResetLevel()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiZiLingGenLevelChange)
+end
+
+function taskController.onHuntMonsterTeamStartTeam(world)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eHuntMonsterTeamStart)
+end
+
+function taskController.onHuntMonsterTeamStartTeamClear()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eHuntMonsterTeamStartClear)
+end
+
+function taskController.onWanBaoXunBaoDuiCatLevelChange(guids)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eExpeditionCatLevelNumChange)
+end
+
+function taskController.onWanBaoXunBaoDuiCatInit()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eExpeditionCatInit)
+end
+
+function taskController.onWanBaoXunBaoDuiCatEquipLevelChange(guids)
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eExpeditionEquipLevelChange)
+end
+
+function taskController.onBattleResultComplete(battleType,result,battleID)
+if result==1 then
+taskController.check_auto_get_reward()
+end
+end
+
+function taskController.onNewDay5am()
+
+taskController:req_dailyTask_data()
+taskModel:disposeConditionsEvent(taskConditionEventType.eNewDay5am)
+end
+
+function taskController.onNewDay()
+
+taskModel:disposeConditionsEvent(taskConditionEventType.eNewDay)
+end
+
+function taskController.fanrongduChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFanRongDuChange)
+end
+
+function taskController.fanrongduValueChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFanRongDuValueChange)
+end
+
+function taskController.YFLZValueChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eYFLZnumChange)
+end
+
+function taskController.ZhenTuStudyChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZhenTuStudyChange)
+end
+
+function taskController.CoupleNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCoupleNumChange)
+end
+
+function taskController.onShanMenDaZhenTeamChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDaZhenTeamChange)
+end
+
+function taskController.onShanMenDaZhenInitData()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eShanMenDaZhenInitData)
+end
+
+function taskController.onZMDaoShiChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eZMDaoShiChange)
+end
+
+function taskController.eSFPYtgNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eSFPYtgNumChange)
+end
+
+function taskController.YFLTGridStateChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eYFLTNumChange)
+end
+
+function taskController.YFLTUnlockGridChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eYFLTUnlockNumChange)
+end
+
+function taskController.DuJieXianDanJieDuanChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDuJieXianDanChange)
+end
+
+function taskController.eDJZBlhNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDJZBlhNumChange)
+end
+
+function taskController.eDJZBwcNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDJZBwcNumChange)
+end
+function taskController.eFeiShengTaiNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eFeiShengTaiNumChange)
+end
+
+function taskController.onAirLevelChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eAirLevel)
+end
+
+function taskController.onAccumulatedNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eAccumulatedNumChange)
+end
+
+function taskController.onXFWDRankLevelChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXFWDRankLevelChange)
+end
+
+function taskController.onTianMoJieInit()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eTianMoJieInit)
+end
+
+function taskController.onTianMoJiejifenChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eTianMoJiejifenChange)
+end
+
+function taskController.onTianMoJieStageChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eTianMoJieStageChange)
+end
+
+function taskController.oneXunBaoShiLianLVChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXBSLLevelChange)
+end
+
+function taskController.onWenXinGuanNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWenXinGuanChange)
+end
+
+function taskController.onHouShanZhenLingLVChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eHouShanLingZhenLevelChange)
+end
+
+function taskController.onTaskNpcTalkChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eTaskNpcTalk)
+end
+
+function taskController.onXJBLTechnologyLvUpFinish()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXJBLTechnologyLvChange)
+end
+
+function taskController.onXianJieCloudChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianJieCloudChange)
+end
+
+function taskController.onJyCountChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eLaoYunToJiuYuan)
+end
+
+function taskController.onSeasonChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCJXYStageInit)
+end
+
+function taskController.onSeasonEnterConditionChange(season_id)
+if season_id==0 then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCJXYConditionChange)
+end
+end
+
+function taskController.onSeasonStageChange(season_id)
+if season_id==0 then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCJXYStageChange)
+end
+end
+
+function taskController.onSeasonStageDataChange(season_id,chapter_idx)
+if season_id==0 then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCJXYStageDataChange)
+end
+end
+
+function taskController.onSeasonOpenAnimationChange(season_id,chapter_idx,status)
+if season_id==0 then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eCJXYStageStoryChange)
+end
+end
+
+function taskController.onXianMoDiscipleNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianMoDiscipleNumChange)
+end
+
+function taskController.onDanFangUnlockChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDanFangUnlockChange)
+end
+
+function taskController.onshoumolistNumChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eShouMoNumChange)
+end
+
+function taskController.onJoinXianYuFlagChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXianYuEnterJoinFlagChange)
+end
+
+function taskController.onYunZhouZhenQiPosChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eYunZhouZhenQiPosChange)
+end
+
+function taskController.onZWEquipChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXSJZhenWuChange)
+end
+
+
+function taskController.onXCEquipChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXSJXingChen)
+end
+
+function taskController.onXCEquipChangebyMix()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXSJXingChen)
+end
+
+function taskController.onXingGuiLvChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eXSJXingGuiLv)
+end
+
+function taskController.onBagEquipFilter()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eBagEquipFilterNum)
+end
+
+function taskController.onWanLingTaLevelChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eWanLingTaLevelChange)
+end
+
+function taskController.onLingShouGetOrUpdate(lsData,isNew)
+if isNew then
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eLingShouNumChange)
+end
+end
+
+function taskController.onLingShouRemove()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eLingShouNumChange)
+end
+
+function taskController.onDiscipleLingShouChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eDiscipleChangeEquipLingShou)
+end
+
+function taskController.onLingShouJJChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eLingShouJingJieChange)
+end
+
+function taskController.onShouLanLingShouChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eShouLanLsChange)
+end
+
+function taskController.onLingShouXMChange()
+taskModel:disposeClientCheckTaskTypeEvent(clientCheckTaskTypeEventType.eLingShouXueMaiChange)
+end
+
+
+
+
+
+
+
+
+
+
+function taskController.check_auto_get_reward()
+if autoGetRewardMark==nil then return end
+
+for taskid,v in pairs(autoGetRewardMark)do
+taskModel:autoGetRewarEx(taskid)
+end
+autoGetRewardMark=nil
+end
+
+function taskController:setAutoGetRewardMark(taskid)
+if autoGetRewardMark==nil then autoGetRewardMark={}end
+autoGetRewardMark[taskid]=true
+end
+
+
+function taskController:doAcceptTask(taskid)
+local taskdata=taskModel:getTask(taskid)
+if taskdata==nil then return end
+
+local taskCfg=taskdata.cfg
+if taskCfg.accept_npc and not taskCfg.auto_accept_after then
+
+
+return
+end
+if taskCfg.acceptTalk==nil then
+
+taskController:reqAcceptTask(taskid)
+else
+
+UIFullStoryBoardControl:showStoryBoardWindow({taskdata=taskdata})
+end
+end
+
+
+function taskController:doGetTaskReward_before(taskid,isFullOpen,skipTalk)
+local taskdata=taskModel:getTask(taskid)
+local taskCfg=taskdata.cfg
+if taskCfg.finish_npc then
+
+xianjieModel:visitNPC(taskCfg.finish_npc)
+return
+elseif taskCfg.speBeforeReward then
+local speType=taskCfg.speBeforeReward[1]
+local speArgs=taskCfg.speBeforeReward[2]
+
+if speType==1 then
+jumpManager:jump(speArgs)
+return
+end
+end
+taskController:doGetTaskReward(taskid,isFullOpen,skipTalk)
+end
+
+function taskController:doGetTaskReward(taskid,isFullOpen,skipTalk)
+local taskdata=taskModel:getTask(taskid)
+if taskdata==nil then return end
+local rewardlist=taskModel:getTaskRewardList(taskid)
+if rewardlist then
+for i=1,#rewardlist do
+local data=rewardlist[i]
+if data then
+local itemid=data[1]
+
+local bagType=itemsConfig.getBagType(itemid)
+if bagType then
+if bagHelper.checkBagFull(bagType)then
+
+return
+end
+end
+end
+end
+end
+
+local taskCfg=taskdata.cfg
+
+local finishPlot=taskCfg.finishPlot
+
+
+if finishPlot~=nil and taskModel:checkTaskPlot2(finishPlot)and taskCfg.screenParams~=nil then
+local callBack=function(flag,pos)
+if flag then
+taskController:doGetTaskRewardEx(taskdata,isFullOpen,skipTalk)
+end
+end
+cameraMoveController:Begin(taskCfg.screenParams,nil,callBack)
+return
+end
+
+taskController:doGetTaskRewardEx(taskdata,isFullOpen,skipTalk)
+end
+
+function taskController:doGetTaskRewardEx(taskdata,isFullOpen,skipTalk)
+local taskCfg=taskdata.cfg
+local taskid=taskdata.taskid
+
+if skipTalk==true or taskCfg.finishTalk==nil then
+
+if taskModel:isMultiCommitTask(taskid)then
+
+
+
+return
+end
+local idx=0
+
+
+if taskModel:isMultiCommitTask(taskid)then
+
+
+
+
+idx=1
+end
+taskController:reqTaskReward(taskid,idx)
+else
+
+UIFullStoryBoardControl:showStoryBoardWindow({taskdata=taskdata,isFullOpen=isFullOpen})
+end
+end
+
+
+function taskController:doJump(taskid,guideCall)
+local config=taskModel:getTaskConfig(taskid)
+if config.weakGuideThinking~=nil then
+if guideCall then
+guideCall()
+end
+weakGuideThinkingController:doThinkingLine(config.weakGuideThinking)
+return
+elseif config.weakGuide~=nil then
+if guideCall then
+guideCall()
+end
+weakGuideController:beginGuide(config.weakGuide)
+return
+end
+local jumpParam=config.jump
+if jumpParam then
+local jumpType=jumpParam[1]
+local jumpId=jumpParam[2]
+local args=jumpParam[3]
+jumpManager:jump({type=jumpType,id=jumpId,args=args})
+return
+end
+
+if xianzhanModel:isXianZhanTask(taskid)then
+xianzhanController:xianzhanTaskJump(taskid)
+return
+end
+
+end
+
+function taskController.showTaskListConditon()
+local flag=false
+if mainViewsControl.isOpen()and worldController:checkNoticiateBlockOpen()then
+if mainControl:isInScene(eSceneType.eZongmen)then
+flag=MysteryModel:get_cur_fbid()==nil
+
+
+
+
+
+elseif mainControl:isInScene(eSceneType.eWorld)then
+local firstid=taskModel:getLineFirstID(taskModel.lineMain)
+flag=taskController:checkInit()and taskModel:checkTaskFinish(firstid)and not worldExperienceModel:checkScene()and MysteryModel:get_cur_fbid()==nil
+
+
+
+
+
+else
+
+
+
+
+
+end
+else
+
+
+
+
+
+end
+return flag
+end
+
+
+
+function taskController:reqDailyTaskList()
+socketManager:send_7_1()
+end
+
+
+function taskController:reqTaskList()
+socketManager:send_7_21()
+end
+
+
+function taskController:reqAcceptTask(taskid)
+
+local taskdata=taskModel:getTask(taskid)
+if taskdata~=nil then
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+if t_taskstate~=taskModel.taskAcceptState then
+
+
+
+return
+end
+local taskline=taskdata.taskline
+if taskline==taskModel.lineMain then
+local fID=taskModel:getLineFinishTaskID(taskline)
+if fID then
+local taskcfg=taskModel:getTaskConfig(fID)
+if taskcfg~=nil then
+local nextid=taskcfg.nextid
+if nextid and nextid~=taskid then
+logErr(FMT.fmt('接取任务异常:当前任务线为{0},该线的任务进度ID为{1},该线的下一个任务ID为{2},接取的任务ID为{3}',taskline,fID,nextid,taskid))
+end
+end
+end
+end
+end
+
+local npcId=xjFactionNPCModel:findNPCByTask(taskid)
+if npcId then
+local check,str=xjFactionNPCModel:checkTaskAcceptExtraCondition(taskid)
+if check then
+xjFactionNPCController:send_37_110(npcId,taskid)
+else
+UIManager.error(str)
+end
+return
+end
+
+local systemZM_ID=systemZongMenModel:getTaskBelongEx(taskdata)
+if systemZM_ID then
+local infoData=systemZongMenModel:findInfoDataById(systemZM_ID)
+if infoData then
+if systemZongMenModel:checkTaskOperateImp(infoData,taskid,true)then
+systemZongMenController:req_task_accept(infoData.serial,taskid)
+end
+else
+loggerUtil.logErrFMT("没有对应任务的系统宗门：{0},{1}",taskid,systemZM_ID)
+end
+else
+socketManager:send_7_22(taskid)
+end
+end
+
+
+function taskController:reqAcceptTaskList(taskidList)
+if taskidList==nil or#taskidList<=0 then return end
+for i,taskid in ipairs(taskidList)do
+local taskdata=taskModel:getTask(taskid)
+if taskdata~=nil then
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+if t_taskstate~=taskModel.taskAcceptState then
+
+
+
+return
+end
+end
+end
+socketManager:send_7_27(#taskidList,taskidList)
+end
+
+
+function taskController:reqTaskReward(taskid,nextidx)
+local npcId=xjFactionNPCModel:findNPCByTask(taskid)
+if npcId then
+xjFactionNPCController:send_37_112(npcId,taskid)
+return
+end
+
+local systemZM_ID=systemZongMenModel:getTaskBelong(taskid)
+if systemZM_ID then
+local infoData=systemZongMenModel:findInfoDataById(systemZM_ID)
+if infoData then
+if systemZongMenModel:checkTaskOperateImp(infoData,taskid,true)then
+systemZongMenController:req_task_reward(infoData.serial,taskid)
+end
+else
+loggerUtil.logErrFMT("没有对应任务的系统宗门：{0},{1}",taskid,systemZM_ID)
+end
+else
+
+
+socketManager:send_7_23(taskid,nextidx)
+
+xianzhanController.onSendTaskGetReward(taskid)
+end
+end
+
+
+function taskController:req_dailyTask_data()
+socketManager:send_7_1()
+end
+
+
+function taskController:req_dailyTask_reward(id)
+if bagHelper.checkAnyBagFull()then return false end
+socketManager:send_7_2(id)
+return true
+end
+
+
+function taskController:req_daily_targetReward()
+
+socketManager:send_7_3()
+end
+
+
+function taskController:req_dailyReward_once()
+
+socketManager:send_7_4()
+end
+
+
+
+
+
+function taskController.do_protocol_7_21(len,taskList,linelistlen,lineList)
+
+
+
+
+
+
+
+
+
+isInit=true
+taskModel:initTaskList(taskList or{})
+taskModel:clearNoneTaskLineNewFlag()
+notifySystem:postNotify(notifyConfig.onTaskInit)
+if len<=0 then
+
+acceptFisrt=true
+end
+taskModel:initTaskLineCoolDown(lineList)
+end
+
+
+function taskController.do_protocol_7_22(taskid,res)
+
+
+local taskcfg=taskModel:getTaskConfig(taskid)
+if taskcfg==nil then
+logErr(FMT.fmt('添加任务时本地没有配置',taskid))
+return
+end
+if not taskController:checkInit()then
+
+
+
+return
+end
+if res==0 then
+taskModel:acceptTask(taskid,0)
+downAssetManager.preDownMijing(taskid)
+else
+
+
+
+
+
+
+end
+end
+
+
+function taskController.do_protocol_7_27(len,list)
+
+
+
+
+if len>0 then
+for i,v in ipairs(list)do
+taskController.do_protocol_7_22(v.param_1,v.param_2)
+end
+end
+end
+
+
+function taskController.do_protocol_7_23(taskid,nextidx,res)
+
+
+
+if res==0 then
+local taskdata=taskModel:getTask(taskid)
+if taskdata==nil then
+
+
+
+return
+end
+
+taskModel:setTaskLineCoolDown(taskdata.taskline)
+taskModel:finishTask(taskdata,nextidx)
+
+AudioManager.playAudio(424)
+pfCommonHelper.taskPoint(taskid)
+else
+
+
+
+
+
+
+end
+end
+
+
+function taskController.do_protocol_7_25(taskInfo)
+
+
+
+if not taskController:checkInit()then
+
+
+
+return
+end
+
+local taskdata=taskModel:getTask(taskInfo.taskid)
+if taskdata==nil then
+
+
+
+
+local taskid=taskInfo.taskid
+local taskcfg=taskModel:getTaskConfig(taskid)
+if taskcfg~=nil then
+taskdata={}
+taskdata.cfg=taskcfg
+taskdata.taskid=taskid
+taskdata.taskline=taskcfg.tasklineid
+taskdata.taskstate=taskInfo.taskstate
+taskdata.taskprogress=taskInfo.taskprogress
+taskdata.timesec=taskInfo.timesec or 0
+taskModel:insertTask(taskdata)
+
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+notifySystem:postNotify(notifyConfig.onTaskChange,taskid,t_taskstate)
+
+
+end
+
+return
+else
+if taskdata.timesec~=taskInfo.timesec then
+
+taskdata.timesec=taskInfo.timesec or 0
+
+
+end
+end
+
+if taskInfo.taskstate>=taskdata.taskstate then
+
+if taskInfo.taskstate==taskdata.taskstate then
+
+if taskInfo.taskstate==taskModel.taskDoingState then
+
+local old_num=taskdata.taskprogress
+taskdata.taskprogress=taskInfo.taskprogress
+local cur_num=taskdata.taskprogress
+
+if old_num~=cur_num then
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+notifySystem:postNotify(notifyConfig.onTaskChange,taskdata.taskid,t_taskstate,cur_num,old_num)
+end
+elseif taskInfo.taskstate==taskModel.taskRewardState then
+
+taskdata.taskprogress=taskInfo.taskprogress
+taskModel:setTaskState(taskdata,taskInfo.taskstate)
+end
+else
+if taskInfo.taskstate==taskModel.taskDoingState then
+
+
+elseif taskInfo.taskstate==taskModel.taskRewardState then
+
+taskdata.taskprogress=taskInfo.taskprogress
+taskModel:setTaskState(taskdata,taskInfo.taskstate)
+
+
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+notifySystem:postNotify(notifyConfig.onTaskChange,taskdata.taskid,t_taskstate)
+
+
+else
+
+
+end
+end
+pfCommonHelper.taskPointCompleted(taskInfo.taskid)
+else
+
+taskdata.taskprogress=taskInfo.taskprogress
+taskModel:setTaskState(taskdata,taskInfo.taskstate)
+
+local t_taskstate=taskModel:getTaskState_transfromstate(taskdata)
+notifySystem:postNotify(notifyConfig.onTaskChange,taskdata.taskid,t_taskstate)
+
+
+end
+end
+
+
+function taskController.do_protocol_7_26(taskid)
+
+
+if not taskController:checkInit()then
+
+
+
+return
+end
+
+if taskModel:removeTaskDirect(taskid)then
+notifySystem:postNotify(notifyConfig.onTaskRemove,taskid)
+end
+end
+
+
+function taskController.do_protocol_7_1(flag,len,array,rewardIdx)
+
+
+
+
+
+
+taskModel:initDailyTaskData(flag,array,rewardIdx)
+UIManager:invokeUIMethod('UIDailyTaskWin','onShowArgRecv')
+taskController:onInitTQEffectData()
+reddotControl.on_dailytask_changed()
+notifySystem:postNotify(notifyConfig.onDailyTaskChange,0)
+end
+
+
+function taskController.do_protocol_7_2(flag,id)
+if flag==0 then
+taskModel:setDailyTaskGotFlag(id)
+UIManager:invokeUIMethod('UIDailyTaskWin','rec_getReward',id)
+local rw=taskModel:getDailyTaskReward(id)
+for i,v in ipairs(rw)do
+local itemid=v[1]
+if itemid==eMoneyType.mtExp then
+local num=v[2]
+UIManager.rewardInfo(iconHelper.getIconName(itemid),FMT.fmt('X{0}',num))
+end
+end
+reddotControl.on_dailytask_changed()
+notifySystem:postNotify(notifyConfig.onDailyTaskChange,id)
+else
+UIManager:invokeUIMethod('UIDailyTaskWin','rec_getRewardEx')
+UIManager.error('领取失败')
+end
+end
+
+
+function taskController.do_protocol_7_3(flag)
+if flag==0 then
+taskModel:setDailyTaskTargetGotFlag()
+local win=UIManager:findActiveWindow('UIDailyTaskWin')
+if win then
+win:refreshLeftPanel()
+end
+
+local rewardIdx=taskModel:getDailyTaskTargetRewardIdx()
+local rewards=taskModel:GetDayTaskTargetReward(rewardIdx)
+local conf={}
+for i,v in ipairs(rewards)do
+table.insert(conf,{itemid=v[1],num=v[2]})
+end
+showPrizeControl.showWindowNow(conf)
+reddotControl.on_dailytask_changed()
+else
+UIManager.error('领取失败')
+end
+end
+
+
+function taskController.do_protocol_7_4(len,taskIdList)
+
+
+if len>0 then
+local taskIds={}
+local itemFlag={}
+local conf={}
+for i,v in ipairs(taskIdList)do
+taskIds[v]=true
+local rewards=taskModel:getDailyTaskReward(v)
+for i,v in ipairs(rewards)do
+local itemid=v[1]
+local num=v[2]
+
+
+
+
+table.insert(conf,{itemid=itemid,num=num})
+end
+end
+taskModel:setDailyTaskGotFlagEx(taskIds)
+
+
+
+for i,v in ipairs(conf)do
+UIManager.rewardInfo(iconHelper.getIconName(v.itemid),FMT.fmt('X{0}',v.num))
+end
+end
+UIManager:invokeUIMethod('UIDailyTaskWin','onShowArgRecv')
+reddotControl.on_dailytask_changed()
+end
+

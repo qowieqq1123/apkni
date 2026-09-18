@@ -1,0 +1,17 @@
+
+NEWBIE_LUA_FUNC_TYPE=
+{
+FindGouWo2LuaFunc=10380,
+GetClothingItem=10860,
+FindGouWo1LuaFunc=10360,
+FinishgouwoLuaFunc=10400,
+FirstTimeBaoLingShuLuaFunc=10740,
+}
+NEWBIE_LUA_FUNC_NAME=
+{
+FindGouWo2LuaFunc='FindGouWo2LuaFunc',
+GetClothingItem='GetClothingItem',
+FindGouWo1LuaFunc='FindGouWo1LuaFunc',
+FinishgouwoLuaFunc='FinishgouwoLuaFunc',
+FirstTimeBaoLingShuLuaFunc='FirstTimeBaoLingShuLuaFunc',
+}

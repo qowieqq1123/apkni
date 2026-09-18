@@ -1,0 +1,9 @@
+
+GUILD_LOG_TYPE=
+{
+gltCreate=1,
+gltChangePos=2,
+gltKickMember=3,
+gltNewMember=4,
+gltChangeLeader=5,
+}

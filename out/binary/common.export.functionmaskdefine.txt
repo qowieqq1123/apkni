@@ -1,0 +1,10 @@
+
+FUNCTION_MASK_TYPE=
+{
+showZhuZuoQuanRen=1,
+showYunYingDanWei=2,
+showChuBanDanWei=3,
+showShenPiWenHao=4,
+showISBM=5,
+showZhuZuoQuanDengJiHao=6,
+}

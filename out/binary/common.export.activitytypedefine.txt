@@ -1,0 +1,7 @@
+
+ACTIVITY_TYPE=
+{
+eQingDian1=1,
+eQingDian2=2,
+eQingDian3=3,
+}

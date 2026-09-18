@@ -1,0 +1,5 @@
+EVENT_OPTION_TITLE_TYPE=
+{
+}
+
+

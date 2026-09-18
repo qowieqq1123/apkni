@@ -1,0 +1,8 @@
+passportDefine=
+{
+eSFPY=1,
+eHCJ=2,
+eTMJ=3,
+}
+
+

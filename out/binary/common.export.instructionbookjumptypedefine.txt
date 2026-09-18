@@ -1,0 +1,9 @@
+INSTRUCTIONBOOK_JUMP_TYPE=
+{
+eUIDiZIGongLueWin=1,
+eUIFightPrepareTipsWin=2,
+eUICommonAttrDetailWin=3,
+eUIJunZhenZhanDouWin=4,
+}
+
+

@@ -1,0 +1,33 @@
+local __bt__={
+[1]="rootNode",
+[4]={
+{
+[1]="sequenceNode",
+[2]="composites",
+[4]={
+{
+[1]="moveToPositionNode",
+[2]="actions.Scene",
+[3]={
+animName="run",
+speed=11,
+inPos="@targetPos",
+cfgId="@cfgId",
+noLimit=true
+},
+},
+{
+[1]="invokeStaticObjFuncNode",
+[2]="actions.common",
+[3]={
+args={'@roomId'},
+object="xianzhanController",
+func="fangKeGoRoomBack",
+replaceArgs=true
+},
+}
+}
+}
+}
+}
+return __bt__

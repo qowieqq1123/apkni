@@ -1,0 +1,10 @@
+xianYuGradeEnum=
+{
+eJueLun=1,
+eChaoQun=2,
+eFeiFan=3,
+ePingPing=4,
+eXiaoTiao=5,
+}
+
+

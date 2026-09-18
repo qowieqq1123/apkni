@@ -1,0 +1,13 @@
+
+SUBACT_DEFINETAB_TYPE=
+{
+eZongMenDaBi_baoming=1,
+eZongMenDaBi_info=2,
+eZongMenDaBi_battle=3,
+eZongMenDaBi_reward=4,
+eZongMenDaBi_score=5,
+eZongMenDaBi_target=6,
+eTianMoRuQin_main=7,
+eTianMoRuQin_qingbao=8,
+eTianMoRuQin_tujian=9,
+}

@@ -1,0 +1,1 @@
+require("lua.gameSys.tagNumberSystem.handle.batchTaskTagNumberHandle")

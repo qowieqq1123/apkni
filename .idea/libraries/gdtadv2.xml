@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gdtadv2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ZQZS/ZQZS/assets/gdt_plugin/gdtadv2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

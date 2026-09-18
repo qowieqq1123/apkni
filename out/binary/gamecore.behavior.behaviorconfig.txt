@@ -1,0 +1,16 @@
+
+
+
+
+
+
+
+
+behaviorConfig={
+stateIdKey='stateId',
+uiStateIdKey='UIstateId',
+
+hudRoomOffset=Vector3(-0.1,0.85,0),
+hudSpeakOffset=Vector3(0,0.6,0),
+}
+

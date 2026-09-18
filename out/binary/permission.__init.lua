@@ -1,0 +1,6 @@
+
+
+
+
+
+require'lua.permission/permissionConfig'

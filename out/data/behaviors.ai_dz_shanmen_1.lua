@@ -1,0 +1,34 @@
+local __bt__={
+[1]="rootNode",
+[4]={
+{
+[1]="sequenceNode",
+[2]="composites",
+[4]={
+{
+[1]="storyPlayEffectNode",
+[2]="actions.Story",
+[3]={
+effectid=1008,
+pos={-8,-48}
+},
+},
+{
+[1]="waitNode",
+[2]="actions.common",
+[3]={
+waitTime=0.1
+},
+},
+{
+[1]="aiSetPositionNode",
+[2]="actions.AI",
+[3]={
+inPos={-8,-48}
+},
+}
+}
+}
+}
+}
+return __bt__

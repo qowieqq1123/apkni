@@ -1,0 +1,12 @@
+
+repeatSendProtocolFilter={
+[0]={
+[2]=true,
+},
+
+[255]={
+all=true,
+
+}
+
+}

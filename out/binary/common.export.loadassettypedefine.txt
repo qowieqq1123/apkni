@@ -1,0 +1,8 @@
+LOAD_ASSET_TYPE=
+{
+pv0=1,
+pv1=2,
+xianjie=3,
+}
+
+

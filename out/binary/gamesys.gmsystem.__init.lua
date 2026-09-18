@@ -1,0 +1,1 @@
+require'lua.gamesys/gmSystem/gmControl'

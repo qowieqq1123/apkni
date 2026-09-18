@@ -1,0 +1,8 @@
+
+GXB_TASK_ENUM=
+{
+eTianYuanShouChao=1,
+eXianMengDiGong=2,
+eXianWuLou=3,
+eLingXuWenJian=4,
+}

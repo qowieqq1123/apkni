@@ -1,0 +1,7 @@
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local WorkBuddy project data (not part of the source)
+.workbuddy/
